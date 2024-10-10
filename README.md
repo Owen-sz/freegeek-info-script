@@ -1,5 +1,5 @@
 # freegeek-info-script
-WIP Script for getting info on Linux Mint needed for Freegeek build sheets
+WIP shell script for getting info on Linux Mint needed for Freegeek build sheets
 
 Must run with sudo
 
