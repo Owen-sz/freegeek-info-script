@@ -122,4 +122,13 @@ else
     echo -e "${BOLD}WiFi:${RESET} No"
 fi
 
+echo "Press enter to begin camera test. Once entered, camera test app will be installed and opened"
+read camera_test
+if [[ $camera_test = "" ]]; then
+    sudo apt -y install cheese
+    cheese
+fi
+echo
+
+
 # TODO: I/O, speaker test, camera test
