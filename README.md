@@ -7,7 +7,9 @@ Still needs:
 - ~~RAM speed and~~ DIMM count
 - ~~WiFi type~~
 - I/O / MMC
-- Speaker, mic, camera test
+- Speaker
+- Mic
+- Camera test [WIP]
 - Drive SMART/bad_block test
 - Optical drive test?
 - Ethernet Y/N + type
