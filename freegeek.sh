@@ -55,26 +55,24 @@ echo ""
 
 # RAM
 memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print $2/1024/1024 " GB"}')
-echo -e "${BOLD}Total Memory:${RESET}" "$memtotal"
+echo -e "${BOLD}Ram:${RESET}" "$memtotal"
 echo -e "${BOLD}***If slightly below 4, 8, 16, 32, etc, mark that on the build sheet instead of the outputted number***${RESET}"
 # TODO: Speed and count
 
 echo ""
 
 # disk
-echo -e "${BOLD}Disk Info:${RESET}"
-
-# Find root device
-disk=$(lsblk -no pkname "$(df / | awk 'NR==2 {print $1}')") | grep -v 'zram'
+echo -e "${BOLD}Disk Info~${RESET}"
+echo ""
 
 # Get total storage
-total_storage=$(lsblk -dn -o SIZE "/dev/$disk")
+total_storage=$(df / | awk 'NR==2 {print $2 / 1000000 "GBs"}')
 interface=$(lsblk -o TRAN | grep -v 'zram' | awk 'NR>1 {print $1}' | sort -u | paste -sd " ")
 type=$(lsblk -d -o NAME,rota | grep -v 'zram')
 
 echo -e "${BOLD}Total Storage:${RESET}" "$total_storage"
 echo -e "${BOLD}Interface:${RESET}" "$interface"
-echo -e "${BOLD}Type:${RESET}" "	$type"
+echo -e "${BOLD}Type:${RESET}" "$type"
 
 echo -e "${BOLD}***If your internal root disk gives a '0' you have an SSD or eMMC/other, if it gives a '1' you have an HDD***${RESET}"
 
@@ -82,7 +80,14 @@ echo ""
 
 # battery
 batteryhealth=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E "capacity" | awk '{print $2}')
-echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth"
+batteryhealth2=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity" | awk '{print $2}')
+
+if [[ -n "$batteryhealth" ]]
+then
+	echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth"
+else
+	echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth2"
+fi
 
 # Product name (works best on laptops)
 product_name=$(sudo dmidecode -s system-product-name)
