@@ -13,8 +13,8 @@ Still needs:
 - Ethernet Y/N + type
 
 Bugs:
-- Disk Info: lsblk: /dev/: not a block device
-- Total storage display issue
+- ~~Disk Info: lsblk: /dev/: not a block device~~
+- ~~Total storage display issue~~
 - Bluetooth if function may not be working properly
 
 Issues:
