@@ -54,10 +54,12 @@ done <<< "$gpus"
 echo ""
 
 # RAM
-memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print $2/1024/1024 " GB"}')
+memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print $2/1000000 " GB"}')
+memspeed=$(sudo dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
 echo -e "${BOLD}Ram:${RESET}" "$memtotal"
-echo -e "${BOLD}***If slightly below 4, 8, 16, 32, etc, mark that on the build sheet instead of the outputted number***${RESET}"
-# TODO: Speed and count
+echo -e "${BOLD}***If slightly above or below 4, 8, 16, 32, etc, mark that on the build sheet instead of the outputted number***${RESET}"
+echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
+# TODO: Count
 
 echo ""
 
@@ -110,12 +112,14 @@ fi
 # wifi
 wifi=$(rfkill list | grep -i wifi)
 wifi2=$(rfkill list | grep -i wireless)
+standard=$(lspci | grep -io '802.11[a-z0-9]*')
+standard2=$(lsusb | grep -io '802.11[a-z0-9]*')
 
 if [[ -n "$wifi" ]] || [[ -n "$wifi2" ]]; 
 then 
-	echo -e "${BOLD}WiFI:${RESET} Yes"
+    echo -e "${BOLD}WiFi:${RESET} Yes" ["$standard"] || ["$standard2"] || ["standard not found"]
 else
-	echo -e "${BOLD}WiFI:${RESET} No"
+    echo -e "${BOLD}WiFi:${RESET} No"
 fi
 
 # TODO: I/O, speaker test, camera test
