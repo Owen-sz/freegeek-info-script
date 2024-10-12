@@ -88,7 +88,7 @@ if [[ -n "$slotstotal" && "$slotstotal" -ne 0 ]]; then
 else
     echo -e "${BOLD}Slots total:${RESET} Unknown"
 fi
-echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Generation not found" 
+echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Generation not found"
 
 echo ""
 
@@ -156,9 +156,9 @@ echo ""
 # SD Card
 mmc=$(sudo dmesg | grep -i mmc)
 if [[ -n "$mmc" ]]; then
-    echo -e "${BOLD}SC Card slot:${RESET} Probably"
+    echo -e "${BOLD}SD Card slot:${RESET} Probably"
 else
-    echo -e "${BOLD}SC Card slot:${RESET} No"
+    echo -e "${BOLD}SD Card slot:${RESET} No"
 fi
 
 # USB 3.0
