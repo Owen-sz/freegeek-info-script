@@ -82,7 +82,7 @@ echo ""
 # disk
 # Function to check if smartmontools is installed
 check_smartmontools() {
-    if dpkg -l | grep -q smartmontools; then
+    if apt list --installed 2>/dev/null | grep -q "^smartmontools/"; then
         return 0
     else
         return 1
@@ -126,6 +126,7 @@ if [[ -n "$batteryhealth" ]]; then
 	echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth"
 else
 	echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth2"
+elif
 fi
 
 # Product name (works best on laptops)
