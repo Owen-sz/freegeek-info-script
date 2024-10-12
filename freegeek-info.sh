@@ -121,6 +121,7 @@ then
 else
     echo -e "${BOLD}WiFi:${RESET} No"
 fi
+echo ""
 
 echo -e "${BOLD}WARNING: MUST WAIT UNTIL UPDATES ARE COMPLETE TO CONTINUE!${RESET}"
 echo "Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera."
