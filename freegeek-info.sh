@@ -139,7 +139,7 @@ fi
 # Port stuff
 # USB 3.0
 usb3=$(lsblk | grep 3.0)
-if [[ -n $usb3]]; then
+if [[ -n "$usb3" ]]; then
     echo -e "${BOLD}USB3.0:${RESET} Probably"
 else
     echo -e "${BOLD}USB3.0:${RESET} No"
@@ -147,7 +147,7 @@ fi
 
 # Gigabite ethernet
 GbE=$(lspci | grep -i gigabit)
-if [[ -n $GbE]]; then
+if [[ -n "$GbE" ]]; then
     echo -e "${BOLD}Gigabite Ethernet:${RESET} Yes"
 else
     echo -e "${BOLD}Gigabite Ethernet:${RESET} No"
