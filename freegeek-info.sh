@@ -131,7 +131,6 @@ type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD or eMMC"; elif [ "$rotation
 echo -e "${BOLD}Total Storage:${RESET} $total_storage"
 echo -e "${BOLD}Interface:${RESET} $interface"
 echo -e "${BOLD}Type:${RESET} $type"
-echo -e "${BOLD}***If your internal root disk gives a '0' you have an SSD or eMMC/other, if it gives a '1' you have an HDD***${RESET}"
 echo -e "${BOLD}Health:${RESET} $healthcheck"
 echo ""
 
