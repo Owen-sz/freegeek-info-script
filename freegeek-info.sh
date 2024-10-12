@@ -245,7 +245,7 @@ if [[ $camera_test = "n" ]]; then
     echo "Camera test aborted"
     echo "Script over"
 elif [[ $camera_test = "" ]]; then
-    echo "Close camera app to quit script"
+    echo -e "${BOLD}Close camera app to quit script${RESET}"
     cheese
 fi
 
