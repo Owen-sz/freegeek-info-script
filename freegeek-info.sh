@@ -136,6 +136,8 @@ else
     echo -e "${BOLD}Battery Health:${RESET} Not found"
 fi
 
+echo ""
+
 # Port stuff
 # USB 3.0
 usb3=$(lsblk | grep 3.0)
