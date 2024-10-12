@@ -11,7 +11,7 @@ Still needs:
 - ~~Mic~~
 - ~~Camera test~~
 - ~~Drive SMART/bad_block test~~
-- Optical drive test?
+- ~~Optical drive test? [ No, but detects if there is one or not ]~~
 - ~~Ethernet Y/N + type?~~
 
 Bugs:

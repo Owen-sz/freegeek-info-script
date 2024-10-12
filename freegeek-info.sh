@@ -17,7 +17,6 @@ threads=$(nproc)
 echo -e "${BOLD}CPU:${RESET} $cpu_info"
 echo -e "${BOLD}Cores:${RESET} $cores"
 echo -e "${BOLD}Threads:${RESET} $threads"
-echo ""
 
 # GPUs
 gpus=$(lspci | grep -i 'vga\|3d\|2d')
@@ -27,6 +26,17 @@ while IFS= read -r gpu; do
     gpu_name=$(echo "$gpu" | awk '{for (i=5; i<=NF; i++) printf $i " "; print ""}')
     if echo "$gpu" | grep -qi 'intel'; then
         echo -e "${BOLD}iGPU:${RESET} $gpu_name"
+        echo ""
+        if [[ "$gpu" =~ "ARC" ]]; then
+            vram=$(lspci -v -s $(lspci | grep -i 'arc' | awk '{print $1}') | grep -i 'prealloc size' | awk '{print $3}' | tr -d 'M')
+            if [[ "$vram" =~ ^[0-9]+$ ]]; then
+                vram_gb=$(echo "scale=2; $vram / 1024" | bc)
+                echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
+            else
+                echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, google it"
+            fi
+        fi
+        echo ""
     else
         echo -e "${BOLD}dGPU:${RESET} $gpu_name"
         if echo "$gpu" | grep -qi 'nvidia'; then
@@ -34,9 +44,9 @@ while IFS= read -r gpu; do
                 vram=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits)
                 if [[ "$vram" =~ ^[0-9]+$ ]]; then
                     vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                    echo -e "${BOLD}VRAM (NVIDIA):${RESET} ${vram_gb} GB"
+                    echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
                 else
-                    echo -e "${BOLD}VRAM (NVIDIA):${RESET} Error in detecting VRAM"
+                    echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, might be a driver issue, google it"
                 fi
             else
                 echo "nvidia-smi not found, cannot detect VRAM for NVIDIA dGPU."
@@ -45,9 +55,9 @@ while IFS= read -r gpu; do
             vram=$(lspci -v | grep -i 'vga\|3d\|2d' | grep -i memory | awk '{print $2 $3}' | tr -d 'M')
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
                 vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                echo -e "${BOLD}VRAM (AMD):${RESET} ${vram_gb} GB"
+                echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
             else
-                echo -e "${BOLD}VRAM (AMD):${RESET} Error in detecting VRAM"
+                echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, google it"
             fi
         else
             echo -e "${BOLD}VRAM:${RESET} Not detected for this dGPU."
@@ -55,14 +65,13 @@ while IFS= read -r gpu; do
     fi
 done <<< "$gpus"
 
-
 echo ""
 
 # RAM
 memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print $2/1000000 " GB"}')
 memspeed=$(sudo dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
 slotsused=$(sudo dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
-slotstotal=$(sudo dmidecode -t connector | grep -i 'memory slot' | wc -l)
+slotstotal=$(sudo dmidecode -t connector | grep -ic 'memory slot')
 generation=$(sudo dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
 generationsdr=$(sudo dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
 echo -e "${BOLD}Ram:${RESET}" "$memtotal"
@@ -139,6 +148,14 @@ fi
 echo ""
 
 # Port stuff
+# SD Card
+mmc=$(sudo dmesg | grep -i mmc)
+if [[ -n "$mmc" ]]; then
+    echo -e "${BOLD}SC Card slot:${RESET} Probably"
+else
+    echo -e "${BOLD}SC Card slot:${RESET} No"
+fi
+
 # USB 3.0
 usb3=$(lsblk | grep 3.0)
 if [[ -n "$usb3" ]]; then
@@ -150,7 +167,7 @@ fi
 # Gigabite ethernet
 GbE=$(lspci | grep -i gigabit)
 if [[ -n "$GbE" ]]; then
-    echo -e "${BOLD}Gigabite Ethernet:${RESET} Yes"
+    echo -e "${BOLD}Gigabite Ethernet:${RESET} Yes, check for physical port"
 else
     echo -e "${BOLD}Gigabite Ethernet:${RESET} No"
 fi
@@ -218,11 +235,14 @@ fi
 
 echo ""
 
-echo -e "${BOLD}WARNING: MUST WAIT UNTIL UPDATES ARE COMPLETE TO CONTINUE!${RESET}"
-echo "Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera."
-echo "Once entered, camera test app will be installed and opened"
-read camera_test
-if [[ $camera_test = "" ]]; then
+echo -e "${BOLD}Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera.${RESET}"
+echo -e "${BOLD}Once entered, camera test app will be installed and opened${RESET}"
+echo -e "${BOLD}If this is a desktop/you do not have a webcam, type 'n'${RESET}"
+
+read -r camera_test
+if [[ $camera_test = "n" ]]; then
+    echo "Camera test aborted."
+elif [[ $camera_test = "" ]]; then
     cheese
 fi
 
