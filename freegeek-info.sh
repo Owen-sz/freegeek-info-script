@@ -118,15 +118,16 @@ echo -e "${BOLD}Health:${RESET} $healthcheck"
 echo -e "${BOLD}***If your internal root disk gives a '0' you have an SSD or eMMC/other, if it gives a '1' you have an HDD***${RESET}"
 echo ""
 
-# battery
+# Battery
 batteryhealth=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E "capacity" | awk '{print $2}')
 batteryhealth2=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity" | awk '{print $2}')
 
 if [[ -n "$batteryhealth" ]]; then
-	echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth"
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth"
+elif [[ -n "$batteryhealth2" ]]; then
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2"
 else
-	echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth2"
-elif
+    echo -e "${BOLD}Battery Health:${RESET} Not found"
 fi
 
 # Product name (works best on laptops)
