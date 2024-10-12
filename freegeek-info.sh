@@ -32,11 +32,12 @@ while IFS= read -r gpu; do
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
                 vram_gb=$(echo "scale=2; $vram / 1024" | bc)
                 echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
+                echo ""
             else
                 echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, google it"
+                echo ""
             fi
         fi
-        echo ""
     else
         echo -e "${BOLD}dGPU:${RESET} $gpu_name"
         if echo "$gpu" | grep -qi 'nvidia'; then
