@@ -78,7 +78,11 @@ echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Gener
 
 echo ""
 
+
 # disk
+until check_smartmontools; do
+    sleep 5
+done
 health=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
 healthcheck=$(sudo smartctl -H "$health" | grep -E "PASSED|FAILED" | awk '{print $NF}')
 
