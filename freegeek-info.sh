@@ -117,7 +117,6 @@ else
         echo "smartmontools not found. Waiting for it to be installed..."
         sleep 5
     done
-    echo "smartmontools is installed, proceeding with health check."
 
     # Run the SMART health check on the device and filter for PASSED or FAILED
     healthcheck=$(sudo smartctl -H "$root" | grep -E "PASSED|FAILED" | awk '{print $NF}')
