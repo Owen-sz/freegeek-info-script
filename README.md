@@ -22,5 +22,5 @@ Bugs:
 Issues:
 - Nvidia drivers may not be properly installed to scrape VRAM, may need an extra package installed
 - Product name may not show manufacturer
-- Disk type doesn't display in a pretty way
+- ~~Disk type doesn't display in a pretty way~~
 

@@ -87,8 +87,8 @@ echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Gener
 
 echo ""
 
-
 # disk
+
 # Function to check if smartmontools is installed
 check_smartmontools() {
     if apt list --installed 2>/dev/null | grep -q "^smartmontools/"; then
@@ -99,10 +99,11 @@ check_smartmontools() {
 }
 
 # Get the root device without the partition number
-health=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
+root=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
+rotation_info=$(lsblk -dn -o ROTA "$root")
 
 # Check if the root device is of type '/dev/mmcblk*'
-if [[ "$health" == /dev/mmcblk* ]]; then
+if [[ "$root" == /dev/mmcblk* ]]; then
     echo "Root device is an eMMC storage, skipping SMART health check. Please run a bad blocks scan with 'sudo badblocks -v /dev/mmcblk0' after this script"
     healthcheck="Not applicable for eMMC"
 else
@@ -111,11 +112,10 @@ else
         echo "smartmontools not found. Waiting for it to be installed..."
         sleep 5
     done
-
     echo "smartmontools is installed, proceeding with health check."
 
     # Run the SMART health check on the device and filter for PASSED or FAILED
-    healthcheck=$(sudo smartctl -H "$health" | grep -E "PASSED|FAILED" | awk '{print $NF}')
+    healthcheck=$(sudo smartctl -H "$root" | grep -E "PASSED|FAILED" | awk '{print $NF}')
 fi
 
 # Get total storage
@@ -123,14 +123,16 @@ total_storage=$(df / | awk 'NR==2 {print $2 / 1000000 "GBs"}')
 
 # Get interface and type information
 interface=$(lsblk -o TRAN | grep -v 'zram' | awk 'NR>1 {print $1}' | sort -u | paste -sd " ")
-type=$(lsblk -d -o NAME,ROTA | grep -v 'zram')
+
+# Determine the type (SSD or HDD)
+type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD or eMMC"; elif [ "$rotation_info" -eq 1 ]; then echo "HDD"; else echo "Unknown"; fi)
 
 # Print the results
 echo -e "${BOLD}Total Storage:${RESET} $total_storage"
 echo -e "${BOLD}Interface:${RESET} $interface"
 echo -e "${BOLD}Type:${RESET} $type"
-echo -e "${BOLD}Health:${RESET} $healthcheck"
 echo -e "${BOLD}***If your internal root disk gives a '0' you have an SSD or eMMC/other, if it gives a '1' you have an HDD***${RESET}"
+echo -e "${BOLD}Health:${RESET} $healthcheck"
 echo ""
 
 # Battery
