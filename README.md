@@ -9,7 +9,7 @@ Still needs:
 - I/O / MMC
 - Speaker
 - Mic
-- Camera test [WIP]
+- ~~Camera test~~
 - Drive SMART/bad_block test
 - Optical drive test?
 - Ethernet Y/N + type
