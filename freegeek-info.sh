@@ -125,7 +125,7 @@ total_storage=$(df / | awk 'NR==2 {print $2 / 1000000 "GBs"}')
 interface=$(lsblk -o TRAN | grep -v 'zram' | awk 'NR>1 {print $1}' | sort -u | paste -sd " ")
 
 # Determine the type (SSD or HDD)
-type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD or eMMC"; elif [ "$rotation_info" -eq 1 ]; then echo "HDD"; else echo "Unknown"; fi)
+type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD (if no interface, probably eMMC)"; elif [ "$rotation_info" -eq 1 ]; then echo "HDD"; else echo "Unknown"; fi)
 
 # Print the results
 echo -e "${BOLD}Total Storage:${RESET} $total_storage"
