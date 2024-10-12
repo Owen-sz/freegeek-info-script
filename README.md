@@ -6,13 +6,13 @@ Must run with sudo
 Still needs:
 - ~~RAM speed and DIMM count~~
 - ~~WiFi type~~
-- I/O / MMC
+- ~~I/O / MMC [ accuracy not possible, USB 3.0 Y/N added ]~~
 - ~~Speaker~~
 - ~~Mic~~
 - ~~Camera test~~
 - ~~Drive SMART/bad_block test~~
 - Optical drive test?
-- Ethernet Y/N + type?
+- ~~Ethernet Y/N + type?~~
 
 Bugs:
 - ~~Disk Info: lsblk: /dev/: not a block device~~

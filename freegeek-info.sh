@@ -4,7 +4,7 @@ BOLD='\033[1m'
 RESET='\033[0m'
 
 # Run updates in background
-gnome-terminal --window -- bash -c "sudo apt install -y smartmontools cheese && sudo apt update && sudo apt upgrade -y; exec bash"
+gnome-terminal --window -- bash -c "sudo apt install -y libcdio-utils smartmontools cheese && sudo apt update && sudo apt upgrade -y; exec bash"
 echo -e "${BOLD}~~~~~~OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE~~~~~~${RESET}"
 echo ""
 
@@ -134,6 +134,45 @@ elif [[ -n "$batteryhealth2" ]]; then
     echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2"
 else
     echo -e "${BOLD}Battery Health:${RESET} Not found"
+fi
+
+# Port stuff
+# USB 3.0
+usb3=$(lsblk | grep 3.0)
+if [[ -n $usb3]]; then
+    echo -e "${BOLD}USB3.0:${RESET} Probably"
+else
+    echo -e "${BOLD}USB3.0:${RESET} No"
+fi
+
+# Gigabite ethernet
+GbE=$(lspci | grep -i gigabit)
+if [[ -n $GbE]]; then
+    echo -e "${BOLD}Gigabite Ethernet:${RESET} Yes"
+else
+    echo -e "${BOLD}Gigabite Ethernet:${RESET} No"
+fi
+
+# Optical drive
+# Function to check if libcdio-utils is installed
+check_libcdio_utils() {
+    if apt list --installed 2>/dev/null | grep -q "^libcdio-utils/"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# Check if libcdio-utils is installed
+if check_libcdio_utils; then
+    cdrom=$(cd-drive 2>/dev/null)
+    if [[ -n "$cdrom" ]]; then
+        echo -e "${BOLD}Optical (CD) Drive:${RESET} Yes"
+    else
+        echo -e "${BOLD}Optical (CD) Drive:${RESET} No"
+    fi
+else
+    echo "libcdio-utils is not installed, skipping optical drive check."
 fi
 
 # Product name (works best on laptops)
