@@ -10,7 +10,7 @@ Still needs:
 - ~~Speaker~~
 - ~~Mic~~
 - ~~Camera test~~
-- Drive SMART/bad_block test
+- ~~Drive SMART/bad_block test~~
 - Optical drive test?
 - Ethernet Y/N + type?
 

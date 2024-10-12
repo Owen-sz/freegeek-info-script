@@ -89,19 +89,25 @@ check_smartmontools() {
     fi
 }
 
-# Loop until smartmontools is installed
-until check_smartmontools; do
-    echo "smartmontools not found. Waiting for it to be installed..."
-    sleep 5
-done
-
-echo "smartmontools is installed, proceeding with health check."
-
 # Get the root device without the partition number
 health=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
 
-# Run the SMART health check on the device and filter for PASSED or FAILED
-healthcheck=$(sudo smartctl -H "$health" | grep -E "PASSED|FAILED" | awk '{print $NF}')
+# Check if the root device is of type '/dev/mmcblk*'
+if [[ "$health" == /dev/mmcblk* ]]; then
+    echo "Root device is an eMMC storage, skipping SMART health check. Please run a bad blocks scan with 'sudo badblocks -v /dev/mmcblk0' after this script"
+    healthcheck="Not applicable for eMMC"
+else
+    # Loop until smartmontools is installed
+    until check_smartmontools; do
+        echo "smartmontools not found. Waiting for it to be installed..."
+        sleep 5
+    done
+
+    echo "smartmontools is installed, proceeding with health check."
+
+    # Run the SMART health check on the device and filter for PASSED or FAILED
+    healthcheck=$(sudo smartctl -H "$health" | grep -E "PASSED|FAILED" | awk '{print $NF}')
+fi
 
 # Get total storage
 total_storage=$(df / | awk 'NR==2 {print $2 / 1000000 "GBs"}')
