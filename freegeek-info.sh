@@ -199,11 +199,11 @@ echo ""
 
 # Product name (works best on laptops)
 product_name=$(sudo dmidecode -s system-product-name)
-echo -e "${BOLD}Product name (if on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding):${RESET}" "$product_name"
+echo "Product name: (if on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)" "$product_name"
 
 # Baseboard (motherboard for desktops)
 baseboard=$(sudo dmidecode -t baseboard | grep -i "product name" | awk -F: '{print $2}')
-echo -e "${BOLD}Motherboard name (if on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information):${RESET}" "$baseboard"
+echo -e "Motherboard name: (if on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)" "$baseboard"
 
 echo ""
 
@@ -248,5 +248,3 @@ elif [[ $camera_test = "" ]]; then
     echo -e "${BOLD}Close camera app to quit script${RESET}"
     cheese
 fi
-
-# TODO: I/O
