@@ -91,8 +91,11 @@ check_smartmontools() {
 
 # Loop until smartmontools is installed
 until check_smartmontools; do
+    echo "smartmontools not found. Waiting for it to be installed..."
     sleep 5
 done
+
+echo "smartmontools is installed, proceeding with health check."
 
 # Get the root device without the partition number
 health=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
