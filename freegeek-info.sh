@@ -4,7 +4,7 @@ BOLD='\033[1m'
 RESET='\033[0m'
 
 # Run updates in background
-#gnome-terminal --window -- bash -c "sudo apt update && sudo apt upgrade -y; exec bash"
+gnome-terminal --window -- bash -c "sudo apt update && sudo apt upgrade -y; exec bash"
 echo -e "${BOLD}~~~~~~OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE~~~~~~${RESET}"
 echo ""
 
@@ -143,9 +143,9 @@ echo -e "${BOLD}WARNING: MUST WAIT UNTIL UPDATES ARE COMPLETE TO CONTINUE!${RESE
 echo "Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera."
 echo "Once entered, camera test app will be installed and opened"
 read camera_test
-#if [[ $camera_test = "" ]]; then
-#    sudo apt -y install cheese > /dev/null 2>&1
-#    cheese
-#fi
+if [[ $camera_test = "" ]]; then
+    sudo apt -y install cheese > /dev/null 2>&1
+    cheese
+fi
 
 # TODO: I/O
