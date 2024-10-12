@@ -4,7 +4,7 @@ BOLD='\033[1m'
 RESET='\033[0m'
 
 # Run updates in background
-gnome-terminal --window -- bash -c "sudo apt update && sudo apt upgrade -y; exec bash"
+gnome-terminal --window -- bash -c "sudo apt install -y smartmontools cheese && sudo apt update && sudo apt upgrade -y; exec bash"
 echo -e "${BOLD}~~~~~~OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE~~~~~~${RESET}"
 echo ""
 
@@ -61,20 +61,26 @@ echo ""
 # RAM
 memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print $2/1000000 " GB"}')
 memspeed=$(sudo dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
-dimmsinstalled=$(sudo dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
+slotsused=$(sudo dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
+slotstotal=$(sudo dmidecode -t connector | grep -i 'memory slot' | wc -l)
 generation=$(sudo dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
 generationsdr=$(sudo dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
 echo -e "${BOLD}Ram:${RESET}" "$memtotal"
-echo -e "${BOLD}***If slightly above or below 4, 8, 16, 32, etc, mark that on the build sheet instead of the outputted number***${RESET}"
+echo -e "${BOLD}***If slightly above or below 4, 8, 16, etc, mark the whole number on the build sheet instead of the exact output***${RESET}"
 echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
-echo -e "${BOLD}DIMMs installed:${RESET}" "$dimmsinstalled"
+echo -e "${BOLD}Slots used:${RESET}" "$slotsused"
+if [[ -n "$slotstotal" ]]; then
+    echo -e "${BOLD}Slots total:${RESET}" "$slotstotal"
+else
+    echo -e "${BOLD}Slots total:${RESET}" "Unknown"
+fi
 echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Generation not found"
 
 echo ""
 
 # disk
-echo -e "${BOLD}Disk Info~${RESET}"
-echo ""
+health=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
+healthcheck=$(sudo smartctl -H "$health" | grep -E "PASSED|FAILED" | awk '{print $NF}')
 
 # Get total storage
 total_storage=$(df / | awk 'NR==2 {print $2 / 1000000 "GBs"}')
@@ -84,6 +90,7 @@ type=$(lsblk -d -o NAME,rota | grep -v 'zram')
 echo -e "${BOLD}Total Storage:${RESET}" "$total_storage"
 echo -e "${BOLD}Interface:${RESET}" "$interface"
 echo -e "${BOLD}Type:${RESET}" "$type"
+echo -e "${BOLD}Health:${RESET}" "$healthcheck"
 
 echo -e "${BOLD}***If your internal root disk gives a '0' you have an SSD or eMMC/other, if it gives a '1' you have an HDD***${RESET}"
 
@@ -93,8 +100,7 @@ echo ""
 batteryhealth=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E "capacity" | awk '{print $2}')
 batteryhealth2=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity" | awk '{print $2}')
 
-if [[ -n "$batteryhealth" ]]
-then
+if [[ -n "$batteryhealth" ]]; then
 	echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth"
 else
 	echo -e "${BOLD}Battery Health:${RESET}" "$batteryhealth2"
@@ -144,7 +150,6 @@ echo "Press enter to begin camera test. It is reccomended to test speaker and mi
 echo "Once entered, camera test app will be installed and opened"
 read camera_test
 if [[ $camera_test = "" ]]; then
-    sudo apt -y install cheese > /dev/null 2>&1
     cheese
 fi
 
