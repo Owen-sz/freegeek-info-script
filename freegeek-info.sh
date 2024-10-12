@@ -122,13 +122,14 @@ else
     echo -e "${BOLD}WiFi:${RESET} No"
 fi
 
-echo "Press enter to begin camera test. Once entered, camera test app will be installed and opened"
+echo -e "${BOLD}WARNING: MUST WAIT UNTIL UPDATES ARE COMPLETE TO CONTINUE!${RESET}"
+echo "Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera."
+echo "Once entered, camera test app will be installed and opened"
 read camera_test
 if [[ $camera_test = "" ]]; then
-    sudo apt -y install cheese
+    sudo apt -y install cheese > /dev/null 2>&1
     cheese
 fi
-echo
 
 
-# TODO: I/O, speaker test, camera test
+# TODO: I/O, speaker test
