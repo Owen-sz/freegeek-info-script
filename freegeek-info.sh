@@ -83,12 +83,12 @@ echo -e "${BOLD}Ram:${RESET}" "$memtotal"
 echo -e "${BOLD}***If slightly above or below 4, 8, 16, etc, mark the whole number on the build sheet instead of the exact output***${RESET}"
 echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
 echo -e "${BOLD}Slots used:${RESET}" "$slotsused"
-if [[ -n "$slotstotal" ]]; then
-    echo -e "${BOLD}Slots total:${RESET}" "$slotstotal"
+if [[ -n "$slotstotal" && "$slotstotal" -ne 0 ]]; then
+    echo -e "${BOLD}Slots total:${RESET} $slotstotal"
 else
-    echo -e "${BOLD}Slots total:${RESET}" "Unknown"
+    echo -e "${BOLD}Slots total:${RESET} Unknown"
 fi
-echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Generation not found"
+echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Generation not found" 
 
 echo ""
 
