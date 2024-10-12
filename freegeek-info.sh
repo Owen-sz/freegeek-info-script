@@ -4,7 +4,7 @@ BOLD='\033[1m'
 RESET='\033[0m'
 
 # Run updates in background
-gnome-terminal --window -- bash -c "sudo apt update && sudo apt upgrade -y; exec bash"
+#gnome-terminal --window -- bash -c "sudo apt update && sudo apt upgrade -y; exec bash"
 echo -e "${BOLD}~~~~~~OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE~~~~~~${RESET}"
 echo ""
 
@@ -27,39 +27,48 @@ while IFS= read -r gpu; do
     gpu_name=$(echo "$gpu" | awk '{for (i=5; i<=NF; i++) printf $i " "; print ""}')
     if echo "$gpu" | grep -qi 'intel'; then
         echo -e "${BOLD}iGPU:${RESET} $gpu_name"
-        vram=$(cat /sys/class/drm/card0/memory_vram_total 2> /dev/null)
-        if [ -n "$vram" ]; then
-            vram_gb=$(echo "scale=2; $vram / 1073741824" | bc)
-        fi
     else
         echo -e "${BOLD}dGPU:${RESET} $gpu_name"
         if echo "$gpu" | grep -qi 'nvidia'; then
             if command -v nvidia-smi &> /dev/null; then
                 vram=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits)
-                vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                echo -e "${BOLD}VRAM (NVIDIA):${RESET} ${vram_gb} GB"
+                if [[ "$vram" =~ ^[0-9]+$ ]]; then
+                    vram_gb=$(echo "scale=2; $vram / 1024" | bc)
+                    echo -e "${BOLD}VRAM (NVIDIA):${RESET} ${vram_gb} GB"
+                else
+                    echo -e "${BOLD}VRAM (NVIDIA):${RESET} Error in detecting VRAM"
+                fi
             else
                 echo "nvidia-smi not found, cannot detect VRAM for NVIDIA dGPU."
             fi
         elif echo "$gpu" | grep -qi 'amd'; then
             vram=$(lspci -v | grep -i 'vga\|3d\|2d' | grep -i memory | awk '{print $2 $3}' | tr -d 'M')
-            vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-            echo -e "${BOLD}VRAM (AMD):${RESET} ${vram_gb} GB"
+            if [[ "$vram" =~ ^[0-9]+$ ]]; then
+                vram_gb=$(echo "scale=2; $vram / 1024" | bc)
+                echo -e "${BOLD}VRAM (AMD):${RESET} ${vram_gb} GB"
+            else
+                echo -e "${BOLD}VRAM (AMD):${RESET} Error in detecting VRAM"
+            fi
         else
             echo -e "${BOLD}VRAM:${RESET} Not detected for this dGPU."
         fi
     fi
 done <<< "$gpus"
 
+
 echo ""
 
 # RAM
 memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print $2/1000000 " GB"}')
 memspeed=$(sudo dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
+dimmsinstalled=$(sudo dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
+generation=$(sudo dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
+generationsdr=$(sudo dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
 echo -e "${BOLD}Ram:${RESET}" "$memtotal"
 echo -e "${BOLD}***If slightly above or below 4, 8, 16, 32, etc, mark that on the build sheet instead of the outputted number***${RESET}"
 echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
-# TODO: Count
+echo -e "${BOLD}DIMMs installed:${RESET}" "$dimmsinstalled"
+echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Generation not found"
 
 echo ""
 
@@ -115,22 +124,28 @@ wifi2=$(rfkill list | grep -i wireless)
 standard=$(lspci | grep -io '802.11[a-z0-9]*')
 standard2=$(lsusb | grep -io '802.11[a-z0-9]*')
 
-if [[ -n "$wifi" ]] || [[ -n "$wifi2" ]]; 
-then 
-    echo -e "${BOLD}WiFi:${RESET} Yes" ["$standard"] || ["$standard2"] || ["standard not found"]
+if [[ -n "$wifi" ]] || [[ -n "$wifi2" ]]; then
+    echo -e "${BOLD}WiFi:${RESET} Yes"
+    if [[ -n "$standard" ]]; then
+        echo "Standard: $standard"
+    elif [[ -n "$standard2" ]]; then
+        echo "Standard: $standard2"
+    else
+        echo -e "${BOLD}WiFi Standard not found${RESET}"
+    fi
 else
     echo -e "${BOLD}WiFi:${RESET} No"
 fi
+
 echo ""
 
 echo -e "${BOLD}WARNING: MUST WAIT UNTIL UPDATES ARE COMPLETE TO CONTINUE!${RESET}"
 echo "Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera."
 echo "Once entered, camera test app will be installed and opened"
 read camera_test
-if [[ $camera_test = "" ]]; then
-    sudo apt -y install cheese > /dev/null 2>&1
-    cheese
-fi
+#if [[ $camera_test = "" ]]; then
+#    sudo apt -y install cheese > /dev/null 2>&1
+#    cheese
+#fi
 
-
-# TODO: I/O, speaker test
+# TODO: I/O
