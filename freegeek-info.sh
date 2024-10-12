@@ -241,7 +241,7 @@ fi
 echo ""
 
 echo -e "${BOLD}Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera.${RESET}"
-echo -e "${BOLD}Once entered, camera test app will be installed and opened${RESET}"
+echo -e "${BOLD}Once entered, camera test app will be opened${RESET}"
 echo -e "${BOLD}If this is a desktop/you do not have a webcam, type 'n'${RESET}"
 
 # Camera (and mic/speaker) test
