@@ -242,9 +242,11 @@ echo -e "${BOLD}If this is a desktop/you do not have a webcam, type 'n'${RESET}"
 
 read -r camera_test
 if [[ $camera_test = "n" ]]; then
-    echo "Camera test aborted."
+    echo "Camera test aborted"
+    echo "Script over"
 elif [[ $camera_test = "" ]]; then
     cheese
+    echo "Close camera app to quit script"
 fi
 
 # TODO: I/O
