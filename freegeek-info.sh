@@ -45,27 +45,31 @@ while IFS= read -r gpu; do
                 if [[ "$vram" =~ ^[0-9]+$ ]]; then
                     vram_gb=$(echo "scale=2; $vram / 1024" | bc)
                     echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
+                    echo ""
                 else
                     echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, might be a driver issue, google it"
+                    echo ""
                 fi
             else
                 echo "nvidia-smi not found, cannot detect VRAM for NVIDIA dGPU."
+                echo ""
             fi
         elif echo "$gpu" | grep -qi 'amd'; then
             vram=$(lspci -v | grep -i 'vga\|3d\|2d' | grep -i memory | awk '{print $2 $3}' | tr -d 'M')
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
                 vram_gb=$(echo "scale=2; $vram / 1024" | bc)
                 echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
+                echo ""
             else
                 echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, google it"
+                echo ""
             fi
         else
             echo -e "${BOLD}VRAM:${RESET} Not detected for this dGPU."
+            echo ""
         fi
     fi
 done <<< "$gpus"
-
-echo ""
 
 # RAM
 memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print $2/1000000 " GB"}')
