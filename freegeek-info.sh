@@ -89,7 +89,7 @@ echo ""
 
 # disk
 
-# Function to check if smartmontools is installed
+# Check if smartmontools is installed
 check_smartmontools() {
     if apt list --installed 2>/dev/null | grep -q "^smartmontools/"; then
         return 0
@@ -102,7 +102,7 @@ check_smartmontools() {
 root=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
 rotation_info=$(lsblk -dn -o ROTA "$root")
 
-# Check if the root device is of type '/dev/mmcblk*'
+# Check if the root device is cringe eMMC '/dev/mmcblk*'
 if [[ "$root" == /dev/mmcblk* ]]; then
     echo "Root device is an eMMC storage, skipping SMART health check. Please run a bad blocks scan with 'sudo badblocks -v /dev/mmcblk0' after this script"
     healthcheck="Not applicable for eMMC"
@@ -127,7 +127,6 @@ interface=$(lsblk -o TRAN | grep -v 'zram' | awk 'NR>1 {print $1}' | sort -u | p
 # Determine the type (SSD or HDD)
 type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD (if no interface, probably eMMC)"; elif [ "$rotation_info" -eq 1 ]; then echo "HDD"; else echo "Unknown"; fi)
 
-# Print the results
 echo -e "${BOLD}Total Storage:${RESET} $total_storage"
 echo -e "${BOLD}Interface:${RESET} $interface"
 echo -e "${BOLD}Type:${RESET} $type"
@@ -149,6 +148,7 @@ fi
 echo ""
 
 # Port stuff
+
 # SD Card
 mmc=$(sudo dmesg | grep -i mmc)
 if [[ -n "$mmc" ]]; then
@@ -174,7 +174,8 @@ else
 fi
 
 # Optical drive
-# Function to check if libcdio-utils is installed
+
+# heck if libcdio-utils is installed
 check_libcdio_utils() {
     if apt list --installed 2>/dev/null | grep -q "^libcdio-utils/"; then
         return 0
@@ -183,7 +184,6 @@ check_libcdio_utils() {
     fi
 }
 
-# Check if libcdio-utils is installed
 if check_libcdio_utils; then
     cdrom=$(cd-drive 2>/dev/null)
     if [[ -n "$cdrom" ]]; then
@@ -240,6 +240,7 @@ echo -e "${BOLD}Press enter to begin camera test. It is reccomended to test spea
 echo -e "${BOLD}Once entered, camera test app will be installed and opened${RESET}"
 echo -e "${BOLD}If this is a desktop/you do not have a webcam, type 'n'${RESET}"
 
+# Camera (and mic/speaker) test
 read -r camera_test
 if [[ $camera_test = "n" ]]; then
     echo "Camera test aborted"
