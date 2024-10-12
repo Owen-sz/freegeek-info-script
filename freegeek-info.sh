@@ -88,7 +88,7 @@ if [[ -n "$slotstotal" && "$slotstotal" -ne 0 ]]; then
 else
     echo -e "${BOLD}Slots total:${RESET} Unknown"
 fi
-echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr" || "Generation not found"
+echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr why are you putting linux mint on an SDR device? bringn this th the retro department" || "Generation not found"
 
 echo ""
 
