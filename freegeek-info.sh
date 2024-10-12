@@ -175,6 +175,8 @@ else
     echo "libcdio-utils is not installed, skipping optical drive check."
 fi
 
+echo ""
+
 # Product name (works best on laptops)
 product_name=$(sudo dmidecode -s system-product-name)
 echo -e "${BOLD}Product name (if on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding):${RESET}" "$product_name"
