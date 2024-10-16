@@ -1,26 +1,14 @@
 # freegeek-info-script
-WIP shell script for getting info on Linux Mint needed for Freegeek build sheets
+Shell script for getting info on Linux Mint needed for Freegeek build sheets
 
-Must run with sudo
+How to run:
 
-Still needs:
-- ~~RAM speed and DIMM count~~
-- ~~WiFi type~~
-- ~~I/O / MMC [ accuracy not possible, USB 3.0 Y/N added ]~~
-- ~~Speaker~~
-- ~~Mic~~
-- ~~Camera test~~
-- ~~Drive SMART/bad_block test~~
-- ~~Optical drive test? [ No, but detects if there is one or not ]~~
-- ~~Ethernet Y/N + type?~~
+Clone this repository, cd into it, then run 
 
-Bugs:
-- ~~Disk Info: lsblk: /dev/: not a block device~~
-- ~~Total storage display issue~~
-- ~~Bluetooth if function may not be working properly~~
+```
+sudo bash freegeek-info.sh
+```
 
 Issues:
 - Nvidia drivers may not be properly installed to scrape VRAM, may need an extra package installed
 - Product name may not show manufacturer
-- ~~Disk type doesn't display in a pretty way~~
-
