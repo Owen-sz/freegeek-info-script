@@ -230,7 +230,7 @@ if [[ -n "$wifi" ]] || [[ -n "$wifi2" ]]; then
     if [[ -n "$standard" ]]; then
         echo "Standard: $standard"
     elif [[ -n "$standard2" ]]; then
-        echo "Standard: $standard2"
+        echo -e "${BOLD}Standard:${RESET} $standard2"
     else
         echo -e "${BOLD}WiFi Standard not found${RESET}"
     fi
