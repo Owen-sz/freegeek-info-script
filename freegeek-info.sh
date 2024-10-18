@@ -179,7 +179,7 @@ fi
 
 # Optical drive
 
-# heck if libcdio-utils is installed
+# Check if libcdio-utils is installed
 check_libcdio_utils() {
     if apt list --installed 2>/dev/null | grep -q "^libcdio-utils/"; then
         return 0
