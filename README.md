@@ -12,16 +12,20 @@ Shell script for Linux Mint that conveniently pools together info needed for Fre
 ## For Contributors
 
 ### Still Needs:
-- [ ] Build Sheet PDFs
+- [ ] Add build sheet PDFs to repo
 - [ ] Foolproofing tips for things like what exactly to google or what kinds of branding to look for on a desktop case
 - [ ] Ability to detect and list multiple drives.
 - [ ] Reliably list total number of RAM slots
 - [ ] NVIDIA will need an extra package installed
+- [ ] Test if Ethernet module works on 10/100, 2.5 Gig, or 10 Gig ports.
+- [ ] Add multi-port functionality to Ethernet module
+- [ ] PSU Info (if possible)
+- [ ] Add message to tell users to look up year the CPU came out to find the year of the machine
 
 ### Bugs:
-- [ ] Ethernet speed module broken
+- [x] Ethernet speed module broken
 
 ### Issues:
-- [ ] Nvidia drivers may not be properly installed to scrape VRAM, may need an extra package installed
+- [ ] NVIDIA drivers may not be properly installed to scrape VRAM, may need an extra package installed
 - [ ] Product name may not show manufacturer
 - [ ] Disk sizes are not very accurate

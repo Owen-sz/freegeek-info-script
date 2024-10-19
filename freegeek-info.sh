@@ -130,7 +130,7 @@ total_storage=$(df / | awk 'NR==2 {print int($2 / 1000000 + 0.5) "GBs"}')
 # Get interface and type information
 interface=$(lsblk -o TRAN | grep -v 'zram' | awk 'NR>1 {print $1}' | sort -u | paste -sd " ")
 
-# Determine the type (SSD or HDD)
+# Determine storage type (SSD or HDD)
 type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD (if no interface, probably eMMC)"; elif [ "$rotation_info" -eq 1 ]; then echo "HDD"; else echo "Unknown"; fi)
 
 echo -e "${BOLD}Total Storage:${RESET} $total_storage"
@@ -172,9 +172,18 @@ else
 fi
 
 # Ethernet Speed
-interface=$(ip link show | awk -F: '/^[0-9]+: e/{print $2}' | uniq)
-speed=$(ethtool “$interface” | grep -i speed)
-echo -e "${BOLD}Ethernet Speed:${RESET} $speed"
+speed=$(ethtool $(ip link show | awk -F: '/^[0-9]+: e/{print $2}') | grep -Eo 'Speed: ([0-9]+)' | awk '{print $2}')
+if [[ $speed == 1000 ]]; then
+    echo -e "${BOLD}Ethernet Speed:${RESET} Gigabit"
+elif [[ $speed == 100 ]]; then
+    echo -e "${BOLD}Ethernet Speed:${RESET} 10/100"
+elif [[ $speed == 2500 ]]; then
+    echo -e "${BOLD}Ethernet Speed:${RESET} 2.5 Gig"
+elif [[ $speed == 10000 ]]; then
+    echo -e "${BOLD}Ethernet Speed:${RESET} 10 Gig (wow!)"
+else
+    echo -e "${BOLD}Ethernet Speed:${RESET} Unknown"
+fi
 
 # Optical drive
 
@@ -202,15 +211,15 @@ echo ""
 
 # Product name (works best on laptops)
 product_name=$(sudo dmidecode -s system-product-name)
-echo -e "${BOLD}Product name:${RESET} (If on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)" "$product_name"
+echo -e "${BOLD}Product name:${RESET} "$product_name" (If on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)"
 
 # Baseboard (motherboard for desktops)
 baseboard=$(sudo dmidecode -t baseboard | grep -i "product name" | awk -F: '{print $2}')
-echo -e "${BOLD}Motherboard name:${RESET} (If on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)" "$baseboard"
+echo -e "${BOLD}Motherboard name:${RESET} "$baseboard" (If on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)"
 
 echo ""
 
-# bluetooth
+# Bluetooth
 bluetooth=$(rfkill list | grep -i bluetooth)
 if [[ -n "$bluetooth" ]]; then
     echo -e "${BOLD}Bluetooth:${RESET} Yes"
@@ -218,7 +227,7 @@ else
     echo -e "${BOLD}Bluetooth:${RESET} No"
 fi
 
-# wifi
+# WiFi
 wifi=$(rfkill list | grep -i wifi)
 wifi2=$(rfkill list | grep -i wireless)
 standard=$(lspci | grep -io '802.11[a-z0-9]*')
@@ -239,18 +248,17 @@ fi
 
 echo ""
 
-echo -e "${BOLD}Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera${RESET}"
-echo -e "${BOLD}Once entered, camera test app will be opened${RESET}"
-echo -e "${BOLD}If this is a desktop/you do not have a webcam, type 'n'${RESET}"
+# Camera, Mic, Speaker test
+echo -e "${BOLD}Press enter to begin camera/mic/speaker test.${RESET} It's recommended to test speakers and mic by recording a video"
+echo -e "${BOLD}Type 'n' if you don't have a webcam${RESET} (If you don't have a webcam, you probably don't have speakers or a mic.)"
 
-# Camera (and mic/speaker) test
 read -r camera_test
 if [[ $camera_test = "n" ]]; then
     echo "Camera test aborted"
     echo "Script complete"
-    echo -e "${BOLD}Please check out https://github.com/Owen-sz/freegeek-info-script to report any issues or contribute!${RESET}"
+    echo -e "${BOLD}Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!${RESET}"
 elif [[ $camera_test = "" ]]; then
     echo -e "${BOLD}Close camera app to quit script${RESET}"
-    echo -e "${BOLD}Please check out https://github.com/Owen-sz/freegeek-info-script to report any issues or contribute!${RESET}"
+    echo -e "${BOLD}Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!${RESET}"
     cheese
 fi
