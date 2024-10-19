@@ -5,7 +5,7 @@ RESET='\033[0m'
 
 # Run updates in background
 gnome-terminal --window -- bash -c "sudo apt install -y libcdio-utils smartmontools cheese && sudo apt update && sudo apt upgrade -y; exec bash"
-echo -e "${BOLD}~~~~~~OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE~~~~~~${RESET}"
+echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE ~~~~~~${RESET}"
 echo ""
 
 sleep 1
@@ -31,7 +31,7 @@ while IFS= read -r gpu; do
             vram=$(lspci -v -s $(lspci | grep -i 'arc' | awk '{print $1}') | grep -i 'prealloc size' | awk '{print $3}' | tr -d 'M')
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
                 vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
+                echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GBs"
                 echo ""
             else
                 echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, google it"
@@ -45,42 +45,41 @@ while IFS= read -r gpu; do
                 vram=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits)
                 if [[ "$vram" =~ ^[0-9]+$ ]]; then
                     vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                    echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
+                    echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GBs"
                     echo ""
                 else
                     echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, might be a driver issue, google it"
                     echo ""
                 fi
             else
-                echo "nvidia-smi not found, cannot detect VRAM for NVIDIA dGPU."
+                echo "nvidia-smi not found, cannot detect VRAM for NVIDIA dGPU"
                 echo ""
             fi
         elif echo "$gpu" | grep -qi 'amd'; then
             vram=$(lspci -v | grep -i 'vga\|3d\|2d' | grep -i memory | awk '{print $2 $3}' | tr -d 'M')
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
                 vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GB"
+                echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GBs"
                 echo ""
             else
                 echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, google it"
                 echo ""
             fi
         else
-            echo -e "${BOLD}VRAM:${RESET} Not detected for this dGPU."
+            echo -e "${BOLD}VRAM:${RESET} Not detected for this dGPU"
             echo ""
         fi
     fi
 done <<< "$gpus"
 
 # RAM
-memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print $2/1000000 " GB"}')
+memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print (int(($2/1000000 + 1)/2) * 2) " GBs"}')
 memspeed=$(sudo dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
 slotsused=$(sudo dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
 slotstotal=$(sudo dmidecode -t connector | grep -ic 'memory slot')
 generation=$(sudo dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
 generationsdr=$(sudo dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
-echo -e "${BOLD}Ram:${RESET}" "$memtotal"
-echo -e "${BOLD}***If slightly above or below 4, 8, 16, etc, mark the whole number on the build sheet instead of the exact output***${RESET}"
+echo -e "${BOLD}RAM:${RESET}" "$memtotal"
 echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
 echo -e "${BOLD}Slots used:${RESET}" "$slotsused"
 if [[ -n "$slotstotal" && "$slotstotal" -ne 0 ]]; then
@@ -88,11 +87,11 @@ if [[ -n "$slotstotal" && "$slotstotal" -ne 0 ]]; then
 else
     echo -e "${BOLD}Slots total:${RESET} Unknown"
 fi
-echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr why are you putting linux mint on an SDR device? bringn this th the retro department" || "Generation not found"
+echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr Why are you putting Linux Mint on an SDR device?! Bring this to the Retro department." || "Generation not found"
 
 echo ""
 
-# disk
+# Disk
 
 # Check if smartmontools is installed
 check_smartmontools() {
@@ -123,7 +122,7 @@ else
 fi
 
 # Get total storage
-total_storage=$(df / | awk 'NR==2 {print $2 / 1000000 "GBs"}')
+total_storage=$(df / | awk 'NR==2 {print int($2 / 1000000 + 0.5) "GBs"}')
 
 # Get interface and type information
 interface=$(lsblk -o TRAN | grep -v 'zram' | awk 'NR>1 {print $1}' | sort -u | paste -sd " ")
@@ -196,24 +195,24 @@ if check_libcdio_utils; then
         echo -e "${BOLD}Optical (CD) Drive:${RESET} No"
     fi
 else
-    echo "libcdio-utils is not installed, skipping optical drive check."
+    echo "libcdio-utils is not installed, skipping optical drive check"
 fi
 
 echo ""
 
 # Product name (works best on laptops)
 product_name=$(sudo dmidecode -s system-product-name)
-echo -e "${BOLD}Product name:${RESET} (if on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)" "$product_name"
+echo -e "${BOLD}Product name:${RESET} (If on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)" "$product_name"
 
 # Baseboard (motherboard for desktops)
 baseboard=$(sudo dmidecode -t baseboard | grep -i "product name" | awk -F: '{print $2}')
-echo -e "${BOLD}Motherboard name:${RESET} (if on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)" "$baseboard"
+echo -e "${BOLD}Motherboard name:${RESET} (If on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)" "$baseboard"
 
 echo ""
 
 # bluetooth
 bluetooth=$(rfkill list | grep -i bluetooth)
-if [[ -n "$bluetooth" ]]; then 
+if [[ -n "$bluetooth" ]]; then
     echo -e "${BOLD}Bluetooth:${RESET} Yes"
 else
     echo -e "${BOLD}Bluetooth:${RESET} No"
@@ -240,7 +239,7 @@ fi
 
 echo ""
 
-echo -e "${BOLD}Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera.${RESET}"
+echo -e "${BOLD}Press enter to begin camera test. It is reccomended to test speaker and microphone by recording a video with the camera${RESET}"
 echo -e "${BOLD}Once entered, camera test app will be opened${RESET}"
 echo -e "${BOLD}If this is a desktop/you do not have a webcam, type 'n'${RESET}"
 
