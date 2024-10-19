@@ -31,7 +31,8 @@ while IFS= read -r gpu; do
             vram=$(lspci -v -s $(lspci | grep -i 'arc' | awk '{print $1}') | grep -i 'prealloc size' | awk '{print $3}' | tr -d 'M')
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
                 vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GBs"
+                vram_gb="${vram_gb%.*}"                             # needs to be tested
+                echo -e "${BOLD}VRAM:${RESET} ${vram_gb}GBs"
                 echo ""
             else
                 echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, google it"
@@ -45,7 +46,8 @@ while IFS= read -r gpu; do
                 vram=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits)
                 if [[ "$vram" =~ ^[0-9]+$ ]]; then
                     vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                    echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GBs"
+                    vram_gb="${vram_gb%.*}"
+                    echo -e "${BOLD}VRAM:${RESET} ${vram_gb}GBs"
                     echo ""
                 else
                     echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, might be a driver issue, google it"
@@ -59,7 +61,8 @@ while IFS= read -r gpu; do
             vram=$(lspci -v | grep -i 'vga\|3d\|2d' | grep -i memory | awk '{print $2 $3}' | tr -d 'M')
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
                 vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                echo -e "${BOLD}VRAM:${RESET} ${vram_gb} GBs"
+                vram_gb="${vram_gb%.*}"                              # needs to be tested
+                echo -e "${BOLD}VRAM:${RESET} ${vram_gb}GBs"
                 echo ""
             else
                 echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, google it"
@@ -73,7 +76,7 @@ while IFS= read -r gpu; do
 done <<< "$gpus"
 
 # RAM
-memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print (int(($2/1000000 + 1)/2) * 2) " GBs"}')
+memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print (int(($2/1000000 + 1)/2) * 2) "GBs"}')
 memspeed=$(sudo dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
 slotsused=$(sudo dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
 slotstotal=$(sudo dmidecode -t connector | grep -ic 'memory slot')
@@ -168,13 +171,10 @@ else
     echo -e "${BOLD}USB3.0:${RESET} No"
 fi
 
-# Gigabite ethernet
-GbE=$(lspci | grep -i gigabit)
-if [[ -n "$GbE" ]]; then
-    echo -e "${BOLD}Gigabite Ethernet:${RESET} Yes, check for physical port"
-else
-    echo -e "${BOLD}Gigabite Ethernet:${RESET} No"
-fi
+# Ethernet Speed
+interface=$(ip link show | awk -F: '/^[0-9]+: e/{print $2}' | uniq)
+speed=$(ethtool “$interface” | grep -i speed)
+echo -e "${BOLD}Ethernet Speed:${RESET} $speed"
 
 # Optical drive
 
@@ -247,8 +247,10 @@ echo -e "${BOLD}If this is a desktop/you do not have a webcam, type 'n'${RESET}"
 read -r camera_test
 if [[ $camera_test = "n" ]]; then
     echo "Camera test aborted"
-    echo "Script over"
+    echo "Script complete"
+    echo -e "${BOLD}Please check out https://github.com/Owen-sz/freegeek-info-script to report any issues or contribute!${RESET}"
 elif [[ $camera_test = "" ]]; then
     echo -e "${BOLD}Close camera app to quit script${RESET}"
+    echo -e "${BOLD}Please check out https://github.com/Owen-sz/freegeek-info-script to report any issues or contribute!${RESET}"
     cheese
 fi
