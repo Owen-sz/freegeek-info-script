@@ -21,11 +21,14 @@ Shell script for Linux Mint that conveniently pools together info needed for Fre
 - [ ] Add multi-port functionality to Ethernet module
 - [ ] PSU Info (if possible)
 - [ ] Add message to tell users to look up year the CPU came out to find the year of the machine
+- [ ] Utilize `inxi -Fxxxz` to find screen resolution, display output ports, find usefulness in machine section. (if this command is present or packaged for Mint)
 
 ### Bugs:
 - [x] Ethernet speed module broken
+- [ ] Typing anything but n or {Enter} in the camera module closes the script without sign off message.
+- [ ] USB3.0 detection doesnt work, uses `lsblk`???
 
 ### Issues:
-- [ ] NVIDIA drivers may not be properly installed to scrape VRAM, may need an extra package installed
-- [ ] Product name may not show manufacturer
-- [ ] Disk sizes are not very accurate
+- NVIDIA drivers may not be properly installed to scrape VRAM, may need an extra package installed
+- Product name may not show manufacturer
+- Disk sizes are not very accurate

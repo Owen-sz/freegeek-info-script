@@ -211,11 +211,11 @@ echo ""
 
 # Product name (works best on laptops)
 product_name=$(sudo dmidecode -s system-product-name)
-echo -e "${BOLD}Product name:${RESET} "$product_name" (If on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)"
+echo -e "${BOLD}Product Name:${RESET} "$product_name" (If on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)"
 
 # Baseboard (motherboard for desktops)
 baseboard=$(sudo dmidecode -t baseboard | grep -i "product name" | awk -F: '{print $2}')
-echo -e "${BOLD}Motherboard name:${RESET} "$baseboard" (If on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)"
+echo -e "${BOLD}Motherboard Name:${RESET}"$baseboard" (If on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)"
 
 echo ""
 
@@ -255,10 +255,10 @@ echo -e "${BOLD}Type 'n' if you don't have a webcam${RESET} (If you don't have a
 read -r camera_test
 if [[ $camera_test = "n" ]]; then
     echo "Camera test aborted"
-    echo "Script complete"
-    echo -e "${BOLD}Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!${RESET}"
+    echo "${BOLD}~~~~~ SCRIPT COMPLETE ~~~~~${RESET}"
+    echo -e "Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!"
 elif [[ $camera_test = "" ]]; then
     echo -e "${BOLD}Close camera app to quit script${RESET}"
-    echo -e "${BOLD}Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!${RESET}"
+    echo -e "Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!"
     cheese
 fi
