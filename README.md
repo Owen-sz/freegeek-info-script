@@ -14,7 +14,7 @@ Shell script for Linux Mint that conveniently pools together info needed for Fre
 ### Still Needs:
 - [ ] Add build sheet PDFs to repo
 - [ ] Foolproofing tips for things like what exactly to google or what kinds of branding to look for on a desktop case
-- [ ] Ability to detect and list multiple drives.
+- [ ] Ability to detect and list multiple drives
 - [ ] Reliably list total number of RAM slots
 - [ ] NVIDIA will need an extra package installed
 - [ ] Test if Ethernet module works on 10/100, 2.5 Gig, or 10 Gig ports.
@@ -26,7 +26,7 @@ Shell script for Linux Mint that conveniently pools together info needed for Fre
 ### Bugs:
 - [x] Ethernet speed module broken
 - [ ] Typing anything but n or {Enter} in the camera module closes the script without sign off message.
-- [ ] USB3.0 detection doesnt work, uses `lsblk`???
+- [x] USB3.0 detection doesnt work, uses `lsblk`???
 
 ### Issues:
 - NVIDIA drivers may not be properly installed to scrape VRAM, may need an extra package installed

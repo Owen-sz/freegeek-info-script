@@ -84,11 +84,11 @@ generation=$(sudo dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
 generationsdr=$(sudo dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
 echo -e "${BOLD}RAM:${RESET}" "$memtotal"
 echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
-echo -e "${BOLD}Slots used:${RESET}" "$slotsused"
+echo -e "${BOLD}Slots Used:${RESET}" "$slotsused"
 if [[ -n "$slotstotal" && "$slotstotal" -ne 0 ]]; then
-    echo -e "${BOLD}Slots total:${RESET} $slotstotal"
+    echo -e "${BOLD}Slots Total:${RESET} $slotstotal"
 else
-    echo -e "${BOLD}Slots total:${RESET} Unknown"
+    echo -e "${BOLD}Slots Total:${RESET} Unknown (This isn't very accurate, physically check how many slots there are)"
 fi
 echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr Why are you putting Linux Mint on an SDR device?! Bring this to the Retro department." || "Generation not found"
 
@@ -109,6 +109,7 @@ check_smartmontools() {
 root=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
 rotation_info=$(lsblk -dn -o ROTA "$root")
 
+if false; then #commenting out smartmontools check
 # Check if the root device is cringe eMMC '/dev/mmcblk*'
 if [[ "$root" == /dev/mmcblk* ]]; then
     echo "Root device is an eMMC storage, skipping SMART health check. Please run a bad blocks scan with 'sudo badblocks -v /dev/mmcblk0' after this script"
@@ -123,6 +124,7 @@ else
     # Run the SMART health check on the device and filter for PASSED or FAILED
     healthcheck=$(sudo smartctl -H "$root" | grep -E "PASSED|FAILED" | awk '{print $NF}')
 fi
+fi #commenting out smartmontools check
 
 # Get total storage
 total_storage=$(df / | awk 'NR==2 {print int($2 / 1000000 + 0.5) "GBs"}')
@@ -164,7 +166,7 @@ else
 fi
 
 # USB 3.0
-usb3=$(lsblk | grep 3.0)
+usb3=$(lsusb | grep 3.0)
 if [[ -n "$usb3" ]]; then
     echo -e "${BOLD}USB3.0:${RESET} Probably"
 else
@@ -255,7 +257,7 @@ echo -e "${BOLD}Type 'n' if you don't have a webcam${RESET} (If you don't have a
 read -r camera_test
 if [[ $camera_test = "n" ]]; then
     echo "Camera test aborted"
-    echo "${BOLD}~~~~~ SCRIPT COMPLETE ~~~~~${RESET}"
+    echo -e "${BOLD}~~~~~ SCRIPT COMPLETE ~~~~~${RESET}"
     echo -e "Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!"
 elif [[ $camera_test = "" ]]; then
     echo -e "${BOLD}Close camera app to quit script${RESET}"
