@@ -11,17 +11,17 @@ sudo bash freegeek-info.sh
 ```
 
 ### Still Needs:
-- [] Boot Menu and BIOS Keys (if possible)
-- [] Build Sheet PDFs
-- [] Foolproofing tips for things like what exactly to google or what kinds of branding to look for on a desktop case
+- [ ] Boot Menu and BIOS Keys (if possible)
+- [ ] Build Sheet PDFs
+- [ ] Foolproofing tips for things like what exactly to google or what kinds of branding to look for on a desktop case
 
 
 ### Bugs:
-- [] Ethernet speed module broken
-- [] Only can detect and list 1 drive
-- [] Can't reliably list total number of RAM slots
+- [ ] Ethernet speed module broken
+- [ ] Only can detect and list 1 drive
+- [ ] Can't reliably list total number of RAM slots
 
 ### Issues:
-- [] Nvidia drivers may not be properly installed to scrape VRAM, may need an extra package installed
-- [] Product name may not show manufacturer
-- [] Disk sizes are not very accurate in Linux
+- [ ] Nvidia drivers may not be properly installed to scrape VRAM, may need an extra package installed
+- [ ] Product name may not show manufacturer
+- [ ] Disk sizes are not very accurate in Linux
