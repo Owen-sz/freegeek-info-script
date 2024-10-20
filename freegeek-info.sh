@@ -33,8 +33,7 @@ while IFS= read -r gpu; do
         if [[ "$gpu" =~ "ARC" ]]; then
             vram=$(lspci -v -s $(lspci | grep -i 'arc' | awk '{print $1}') | grep -i 'prealloc size' | awk '{print $3}' | tr -d 'M')
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
-                vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                vram_gb="${vram_gb%.*}"                             # needs to be tested
+                vram_gb=$(echo "scale=2; $vram / 1024" | bc | cut -d'.' -f1)                          # needs to be tested
                 echo -e "${BOLD}VRAM:${RESET} ${vram_gb}GBs"
                 echo ""
             else
@@ -48,8 +47,7 @@ while IFS= read -r gpu; do
             if command -v nvidia-smi &> /dev/null; then
                 vram=$(nvidia-smi --query-gpu=memory.total --format=csv,noheader,nounits)
                 if [[ "$vram" =~ ^[0-9]+$ ]]; then
-                    vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                    vram_gb="${vram_gb%.*}"
+                    vram_gb=$(echo "scale=2; $vram / 1024" | bc | cut -d'.' -f1)
                     echo -e "${BOLD}VRAM:${RESET} ${vram_gb}GBs"
                     echo ""
                 else
@@ -63,8 +61,7 @@ while IFS= read -r gpu; do
         elif echo "$gpu" | grep -qi 'amd'; then
             vram=$(lspci -v | grep -i 'vga\|3d\|2d' | grep -i memory | awk '{print $2 $3}' | tr -d 'M')
             if [[ "$vram" =~ ^[0-9]+$ ]]; then
-                vram_gb=$(echo "scale=2; $vram / 1024" | bc)
-                vram_gb="${vram_gb%.*}"                              # needs to be tested
+                vram_gb=$(echo "scale=2; $vram / 1024" | bc | cut -d'.' -f1)                             # needs to be tested
                 echo -e "${BOLD}VRAM:${RESET} ${vram_gb}GBs"
                 echo ""
             else
@@ -83,6 +80,7 @@ memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print (int(($2/1000000 +
 memspeed=$(dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
 slotsused=$(dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
 slotstotal=$(dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
+generation=$(sudo dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
 generationsdr=$(dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
 echo -e "${BOLD}RAM:${RESET}" "$memtotal"
 echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
@@ -111,7 +109,6 @@ check_smartmontools() {
 root=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
 rotation_info=$(lsblk -dn -o ROTA "$root")
 
-if false; then #commenting out smartmontools check
 # Check if the root device is cringe eMMC '/dev/mmcblk*'
 if [[ "$root" == /dev/mmcblk* ]]; then
     echo "Root device is an eMMC storage, skipping SMART health check. Please run a bad blocks scan with 'sudo badblocks -v /dev/mmcblk0' after this script"
@@ -126,7 +123,6 @@ else
     # Run the SMART health check on the device and filter for PASSED or FAILED
     healthcheck=$(smartctl -H "$root" | grep -E "PASSED|FAILED" | awk '{print $NF}')
 fi
-fi #commenting out smartmontools check
 
 # Get total storage
 total_storage=$(df / | awk 'NR==2 {print int($2 / 1000000 + 0.5) "GBs"}')
@@ -150,7 +146,7 @@ batteryhealth2=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -
 if [[ -n "$batteryhealth" ]]; then
     echo -e "${BOLD}Battery Health:${RESET} $batteryhealth"
 elif [[ -n "$batteryhealth2" ]]; then
-    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2 (This computer is probably a Surface or ThinkPad, it has 2 batteries so list both)"
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2 (This computer has 2 batteries, ask coordinator about listing both)"
 else
     echo -e "${BOLD}Battery Health:${RESET} Not found"
 fi
@@ -177,10 +173,10 @@ fi
 
 # Ethernet Speed
 speed=$(ethtool $(ip link show | awk -F: '/^[0-9]+: e/{print $2}') | grep -Eo 'Speed: ([0-9]+)' | awk '{print $2}')
-if [[ $speed == 1000 ]]; then
-    echo -e "${BOLD}Ethernet Speed:${RESET} Gigabit"
-elif [[ $speed == 100 ]]; then
+if [[ $speed == 100 ]]; then
     echo -e "${BOLD}Ethernet Speed:${RESET} 10/100"
+elif [[ $speed == 1000 ]]; then
+    echo -e "${BOLD}Ethernet Speed:${RESET} Gigabit"
 elif [[ $speed == 2500 ]]; then
     echo -e "${BOLD}Ethernet Speed:${RESET} 2.5 Gig"
 elif [[ $speed == 10000 ]]; then
