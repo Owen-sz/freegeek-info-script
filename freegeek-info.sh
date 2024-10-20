@@ -6,6 +6,7 @@ RESET='\033[0m'
 # Run updates in background
 gnome-terminal --window -- bash -c "sudo apt install -y libcdio-utils smartmontools cheese && sudo apt update && sudo apt upgrade -y; exec bash"
 echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE ~~~~~~${RESET}"
+
 echo ""
 
 sleep 1
@@ -17,6 +18,8 @@ threads=$(nproc)
 echo -e "${BOLD}CPU:${RESET} $cpu_info"
 echo -e "${BOLD}Cores:${RESET} $cores"
 echo -e "${BOLD}Threads:${RESET} $threads"
+
+echo ""
 
 # GPUs
 gpus=$(lspci | grep -i 'vga\|3d\|2d')
@@ -77,11 +80,10 @@ done <<< "$gpus"
 
 # RAM
 memtotal=$(cat /proc/meminfo | grep -i memtotal | awk '{print (int(($2/1000000 + 1)/2) * 2) "GBs"}')
-memspeed=$(sudo dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
-slotsused=$(sudo dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
-slotstotal=$(sudo dmidecode -t connector | grep -ic 'memory slot')
-generation=$(sudo dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
-generationsdr=$(sudo dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
+memspeed=$(dmidecode -t memory | grep -iE '^\s*Speed: [0-9]+ MT/s' | head -n 1 | awk '{print $2}')
+slotsused=$(dmidecode --type 17 | grep -A 10 'Memory Device' | grep -c 'Size: [0-9]')
+slotstotal=$(dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
+generationsdr=$(dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
 echo -e "${BOLD}RAM:${RESET}" "$memtotal"
 echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
 echo -e "${BOLD}Slots Used:${RESET}" "$slotsused"
@@ -122,7 +124,7 @@ else
     done
 
     # Run the SMART health check on the device and filter for PASSED or FAILED
-    healthcheck=$(sudo smartctl -H "$root" | grep -E "PASSED|FAILED" | awk '{print $NF}')
+    healthcheck=$(smartctl -H "$root" | grep -E "PASSED|FAILED" | awk '{print $NF}')
 fi
 fi #commenting out smartmontools check
 
@@ -138,7 +140,7 @@ type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD (if no interface, probably 
 echo -e "${BOLD}Total Storage:${RESET} $total_storage"
 echo -e "${BOLD}Interface:${RESET} $interface"
 echo -e "${BOLD}Type:${RESET} $type"
-echo -e "${BOLD}Health:${RESET} $healthcheck"
+echo -e "${BOLD}Disk Health:${RESET} $healthcheck"
 echo ""
 
 # Battery
@@ -148,7 +150,7 @@ batteryhealth2=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -
 if [[ -n "$batteryhealth" ]]; then
     echo -e "${BOLD}Battery Health:${RESET} $batteryhealth"
 elif [[ -n "$batteryhealth2" ]]; then
-    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2"
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2 (This computer is probably a Surface or ThinkPad, it has 2 batteries so list both)"
 else
     echo -e "${BOLD}Battery Health:${RESET} Not found"
 fi
@@ -158,17 +160,17 @@ echo ""
 # Port stuff
 
 # SD Card
-mmc=$(sudo dmesg | grep -i mmc)
+mmc=$(dmesg | grep -i mmc)
 if [[ -n "$mmc" ]]; then
-    echo -e "${BOLD}SD Card slot:${RESET} Probably"
+    echo -e "${BOLD}SD Card Slot:${RESET} Probably"
 else
-    echo -e "${BOLD}SD Card slot:${RESET} No"
+    echo -e "${BOLD}SD Card Slot:${RESET} No"
 fi
 
 # USB 3.0
 usb3=$(lsusb | grep 3.0)
 if [[ -n "$usb3" ]]; then
-    echo -e "${BOLD}USB3.0:${RESET} Probably"
+    echo -e "${BOLD}USB3.0:${RESET} Probably (Check for blue USB ports manually)"
 else
     echo -e "${BOLD}USB3.0:${RESET} No"
 fi
@@ -211,13 +213,23 @@ fi
 
 echo ""
 
+#Screen Size
+screensize=$(inxi -Gxx | awk -F'[()]' '/diag:/ {print $2; exit}')
+echo -e "${BOLD}Screen Size:${RESET} $screensize"
+
+# Screen Resolution
+resolution=$(inxi -Gxx | awk 'BEGIN {count=0} /res:/ {count++; if (count==2) {for (i=1; i<=NF; i++) if ($i=="res:") {print $(i+1); exit}}}')
+echo -e "${BOLD}Screen Resolution:${RESET} $resolution"
+
+echo ""
+
 # Product name (works best on laptops)
-product_name=$(sudo dmidecode -s system-product-name)
-echo -e "${BOLD}Product Name:${RESET} "$product_name" (If on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)"
+product_name=$(dmidecode -s system-product-name)
+echo -e "${BOLD}Product Name:${RESET} $product_name (If on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)"
 
 # Baseboard (motherboard for desktops)
-baseboard=$(sudo dmidecode -t baseboard | grep -i "product name" | awk -F: '{print $2}')
-echo -e "${BOLD}Motherboard Name:${RESET}"$baseboard" (If on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)"
+baseboard=$(dmidecode -t baseboard | grep -i "product name" | awk -F: '{print $2}')
+echo -e "${BOLD}Motherboard Name:${RESET} $baseboard (If on a desktop, this is your motherboard model. If on a laptop/all-in-one, this is probably worthless information)"
 
 echo ""
 
@@ -238,11 +250,11 @@ standard2=$(lsusb | grep -io '802.11[a-z0-9]*')
 if [[ -n "$wifi" ]] || [[ -n "$wifi2" ]]; then
     echo -e "${BOLD}WiFi:${RESET} Yes"
     if [[ -n "$standard" ]]; then
-        echo "Standard: $standard"
+        echo "${BOLD}WiFi Standard:${RESET} $standard"
     elif [[ -n "$standard2" ]]; then
-        echo -e "${BOLD}Standard:${RESET} $standard2"
+        echo -e "${BOLD}WiFi Standard:${RESET} $standard2"
     else
-        echo -e "${BOLD}WiFi Standard not found${RESET}"
+        echo -e "${BOLD}WiFi Standard:${RESET} Unknown"
     fi
 else
     echo -e "${BOLD}WiFi:${RESET} No"
@@ -251,8 +263,8 @@ fi
 echo ""
 
 # Camera, Mic, Speaker test
-echo -e "${BOLD}Press enter to begin camera/mic/speaker test.${RESET} It's recommended to test speakers and mic by recording a video"
-echo -e "${BOLD}Type 'n' if you don't have a webcam${RESET} (If you don't have a webcam, you probably don't have speakers or a mic.)"
+echo -e "${BOLD}Press enter to begin camera/mic/speaker test.${RESET} (It's recommended to test speakers and mic by recording a video)"
+echo -e "${BOLD}Type 'n' if you don't have a webcam${RESET} (If you don't have a webcam, you probably don't have speakers or a mic)"
 
 read -r camera_test
 if [[ $camera_test = "n" ]]; then
