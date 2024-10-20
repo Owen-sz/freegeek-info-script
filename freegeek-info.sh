@@ -170,7 +170,7 @@ fi
 # USB 3.0
 usb3=$(lsusb | grep 3.0)
 if [[ -n "$usb3" ]]; then
-    echo -e "${BOLD}USB3.0:${RESET} Probably (Check for blue USB ports manually)"
+    echo -e "${BOLD}USB3.0:${RESET} Probably (check!)"
 else
     echo -e "${BOLD}USB3.0:${RESET} No"
 fi
