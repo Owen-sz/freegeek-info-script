@@ -3,15 +3,19 @@ Shell script that pools together info needed for Free Geek build sheets.
 
 ### How to run:
 1. Open the terminal app from the dock
-2. Paste this into the terminal to clone (download) the script
+2. Paste this command into the terminal to install git
+  ```console
+sudo apt install git -y
+```
+3. Paste this into the terminal to clone (download) the script
 ```console
 git clone https://github.com/Owen-sz/freegeek-info-script.git
 ```
-3. Paste this into the terminal to CD into the script's directory
+4. Paste this into the terminal to CD into the script's directory
 ```console
 cd freegeek-info-script
 ```
-4. Paste this into the terminal to run the script
+5. Paste this into the terminal to run the script
 ```console
 sudo bash freegeek-info.sh
 ```
