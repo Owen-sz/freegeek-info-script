@@ -1,5 +1,5 @@
 # freegeek-info-script
-Shell script that pools together info needed for Free Geek build sheets.
+Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint (for now).
 
 ### How to run:
 1. Open the terminal app from the dock
