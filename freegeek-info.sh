@@ -158,7 +158,7 @@ echo ""
 # SD Card
 mmc=$(dmesg | grep -i mmc)
 if [[ -n "$mmc" ]]; then
-    echo -e "${BOLD}SD Card Slot:${RESET} Probably"
+    echo -e "${BOLD}SD Card Slot:${RESET} Probably (check)"
 else
     echo -e "${BOLD}SD Card Slot:${RESET} No"
 fi
@@ -166,7 +166,7 @@ fi
 # USB 3.0
 usb3=$(lsusb | grep 3.0)
 if [[ -n "$usb3" ]]; then
-    echo -e "${BOLD}USB3.0:${RESET} Probably (check!)"
+    echo -e "${BOLD}USB3.0:${RESET} Probably (check, note port may not always be blue, check for 'SS' label)"
 else
     echo -e "${BOLD}USB3.0:${RESET} No"
 fi
@@ -203,8 +203,6 @@ if check_libcdio_utils; then
     else
         echo -e "${BOLD}Optical (CD) Drive:${RESET} No"
     fi
-else
-    echo "libcdio-utils is not installed, skipping optical drive check"
 fi
 
 echo ""
