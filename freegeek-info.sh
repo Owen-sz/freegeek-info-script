@@ -140,15 +140,33 @@ echo -e "${BOLD}Disk Health:${RESET} $healthcheck"
 echo ""
 
 # Battery
-batteryhealth=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E "capacity" | awk '{print $2}')
-batteryhealth2=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity" | awk '{print $2}')
+batteryhealth0=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E "capacity" | awk '{print $2}')
+batteryhealth1=$(upower -i /org/freedesktop/UPower/devices/battery_BAT1 | grep -E "capacity" | awk '{print $2}')
+batteryhealth2=$(upower -i /org/freedesktop/UPower/devices/battery_BAT2 | grep -E "capacity" | awk '{print $2}')
 
-if [[ -n "$batteryhealth" ]]; then
-    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth"
-elif [[ -n "$batteryhealth2" ]]; then
-    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2 (This computer has 2 batteries, ask coordinator about listing both)"
-else
-    echo -e "${BOLD}Battery Health:${RESET} Not found"
+count=0
+
+if [[ -n "$batteryhealth0" ]]; then
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth0"
+    ((count++))
+fi
+
+if [[ -n "$batteryhealth1" ]]; then
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth1"
+    ((count++))
+fi
+
+if [[ -n "$batteryhealth2" ]]; then
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2"
+    ((count++))
+fi
+
+if [[ $count -eq 2 ]]; then
+    echo -e "${BOLD}This computer has 2 batteries. Check with build lab coordinator on how to mark on build sheet.${RESET}"
+elif [[ $count -eq 3 ]]; then
+    echo -e "${BOLD}This computer has 3 batteries. That probably should not happen, ask build coordinator${RESET}"
+elif [[ $count -eq 0 ]]; then
+    echo -e "${BOLD}Battery health not found${RESET}"
 fi
 
 echo ""
