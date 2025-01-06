@@ -83,7 +83,7 @@ slotstotal=$(dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
 generation=$(sudo dmidecode --type 17 | grep -i ddr | awk '{print $2}' | uniq)
 generationsdr=$(dmidecode --type 17 | grep -i sdr | awk '{print $2}' | uniq)
 echo -e "${BOLD}RAM:${RESET}" "$memtotal"
-echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz"
+echo -e "${BOLD}Speed:${RESET}" "$memspeed" "MHz (this is the configured MHz speed of your RAM, your actual RAM may be able to run faster, check your UEFI/BIOS if the RAM speed can be increased)"
 echo -e "${BOLD}Slots Used:${RESET}" "$slotsused"
 if [[ -n "$slotstotal" && "$slotstotal" -ne 0 ]]; then
     echo -e "${BOLD}Slots Total:${RESET} $slotstotal"
