@@ -152,12 +152,12 @@ if [[ -n "$batteryhealth0" ]]; then
 fi
 
 if [[ -n "$batteryhealth1" ]]; then
-    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth1"
+    echo -e "${BOLD}(Second) Battery Health:${RESET} $batteryhealth1"
     ((count++))
 fi
 
 if [[ -n "$batteryhealth2" ]]; then
-    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2"
+    echo -e "${BOLD}(Third?) Battery Health:${RESET} $batteryhealth2"
     ((count++))
 fi
 
