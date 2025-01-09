@@ -127,8 +127,8 @@ fi
 # Get total storage
 total_storage=$(df / | awk 'NR==2 {print int($2 / 1000000 + 0.5) "GBs"}')
 
-# Get interface and type information
-interface=$(lsblk -o TRAN | grep -v 'zram' | awk 'NR>1 {print $1}' | sort -u | paste -sd " ")
+# Get ` and type information
+interface=$(lsblk -o TRAN | grep -Ev 'zram|usb' | awk 'NR>1 {print $1}' | sort -u | paste -sd " " )
 
 # Determine storage type (SSD or HDD)
 type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD (if no interface, probably eMMC)"; elif [ "$rotation_info" -eq 1 ]; then echo "HDD"; else echo "Unknown"; fi)
