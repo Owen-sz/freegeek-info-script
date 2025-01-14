@@ -22,6 +22,7 @@ sudo apt install git -y && git clone https://github.com/Owen-sz/freegeek-info-sc
 - [ ] Add message to tell users to look up year the CPU came out to find the year of the machine
 - [ ] Utilize `inxi -Fxxxz` to find display output ports, find usefulness in machine section
 - [ ] Test multi-battery support
+- [ ] Break into muiltiple files per OS
 
 ### Bugs:
 - [ ] Typing anything but `n` or `{Enter}` in the camera module closes the script without sign off message
