@@ -19,7 +19,7 @@ sudo apt install git -y && git clone https://github.com/Owen-sz/freegeek-info-sc
 - [ ] Reliably list total number of RAM slots
 - [ ] NVIDIA will need an extra package installed
 - [ ] Find out if Ethernet module works on 10/100, 2.5 Gig, or 10 Gig ports.
-- [ ] Add message to tell users to look up year the CPU came out to find the year of the machine
+- [ ] Add message to tell users to look up year the CPU name out to find the year of the machine
 - [ ] Utilize `inxi -Fxxxz` to find display output ports, find usefulness in machine section
 - [ ] Test multi-battery support
 - [ ] Break into muiltiple files per OS
