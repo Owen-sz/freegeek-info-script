@@ -1,7 +1,21 @@
 #!/bin/bash
 
+# Set bold font
 BOLD='\033[1m'
 RESET='\033[0m'
+
+. /etc/os-release
+
+# Check if on Linux Mint or Ultramarine Linux
+check_os() {
+    if [[ "$NAME" == "Linux Mint" ]]; then
+        :
+    elif [[ "$NAME" == "Ultramarine Linux" ]]; then
+        ./freegeek-info-ultramarine.sh
+    else
+        echo "${BOLD}This OS is not supported. If you think it should be, ping @Owen in the Free Geek discord.${RESET}"
+    fi
+}
 
 # Run updates in background
 gnome-terminal --window -- bash -c "sudo apt install -y libcdio-utils smartmontools ethtool cheese && sudo apt update && sudo apt upgrade -y; exec bash"
