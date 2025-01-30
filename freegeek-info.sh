@@ -4,18 +4,31 @@
 BOLD='\033[1m'
 RESET='\033[0m'
 
+ULTRAMARINE_PATH="/freegeek-info-ultramarine.sh"
+
 . /etc/os-release
 
 # Check if on Linux Mint or Ultramarine Linux
 check_os() {
-    if [[ "$NAME" == "Linux Mint" ]]; then
-        :
-    elif [[ "$NAME" == "Ultramarine Linux" ]]; then
-        exec ./freegeek-info-ultramarine.sh
+    if [[ "$NAME" == "Ultramarine Linux" ]]; then
+        sudo bash ./freegeek-info-ultramarine.sh
+        #"$SCRIPT_PATH"
+        exit 0
+    elif [[ "$NAME" == "Linux Mint" ]]; then
+        return 0
     else
         echo "${BOLD}This OS is not supported. If you think it should be, ping @Owen in the Free Geek discord.${RESET}"
+        exit 1
     fi
 }
+
+# Call the function
+check_os
+
+# Exit if the called script should stop the rest of the script
+if [[ "$NAME" == "Ultramarine Linux" ]]; then
+    exit 0
+
 
 # Run updates in background
 gnome-terminal --window -- bash -c "sudo apt install -y libcdio-utils smartmontools ethtool cheese && sudo apt update && sudo apt upgrade -y; exec bash"
