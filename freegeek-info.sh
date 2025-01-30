@@ -11,7 +11,7 @@ check_os() {
     if [[ "$NAME" == "Linux Mint" ]]; then
         :
     elif [[ "$NAME" == "Ultramarine Linux" ]]; then
-        ./freegeek-info-ultramarine.sh
+        exec ./freegeek-info-ultramarine.sh
     else
         echo "${BOLD}This OS is not supported. If you think it should be, ping @Owen in the Free Geek discord.${RESET}"
     fi
