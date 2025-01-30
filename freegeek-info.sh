@@ -4,15 +4,12 @@
 BOLD='\033[1m'
 RESET='\033[0m'
 
-ULTRAMARINE_PATH="/freegeek-info-ultramarine.sh"
-
 . /etc/os-release
 
 # Check if on Linux Mint or Ultramarine Linux
 check_os() {
     if [[ "$NAME" == "Ultramarine Linux" ]]; then
         sudo bash ./freegeek-info-ultramarine.sh
-        #"$SCRIPT_PATH"
         exit 0
     elif [[ "$NAME" == "Linux Mint" ]]; then
         return 0
