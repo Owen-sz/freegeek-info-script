@@ -15,7 +15,6 @@ Shell script that pools together info needed for Free Geek build sheets. Will on
 ### Still Needs:
 - [ ] Add build sheet PDFs to repo
 - [ ] Add Ultramarine Xfce Edition xfce-terminal background logic
-- [ ] Test on Ultramarine
 - [ ] Foolproofing tips for things like what exactly to google or what kinds of branding to look for on a desktop case
 - [ ] Ability to detect and list multiple drives
 - [ ] Reliably list total number of RAM slots
