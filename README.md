@@ -2,7 +2,7 @@
 Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint. Ultramarine Linux support coming soon.
 
 ### How to run:
-1. Open the terminal app from the dock
+1. Open the terminal app from the dock. If it is not there, search the applications menu.
 2. Paste this into the terminal to install git if needed, clone (download) the scripit, and run it. It is recommended to increase the size of your terminal at this time.
 ```console
 (which git || sudo apt install -y git) && git clone https://github.com/Owen-sz/freegeek-info-script.git && cd freegeek-info-script && sudo bash freegeek-info.sh
