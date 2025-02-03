@@ -1,5 +1,5 @@
 # freegeek-info-script
-Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint. Ultramarine Linux support coming soon.
+Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint and Ultramarine Linux. 
 
 ### How to run:
 1. Open the terminal app from the dock. If it is not there, search the applications menu.
