@@ -5,7 +5,7 @@ RESET='\033[0m'
 
 # Run updates in background
 # TODO - Xfce terminal logic
-konsole --window -- bash -c "sudo dnf -y in libcdio smartmontools ethtool cheese && sudo dnf -y up; exec bash"
+konsole --window -- bash -c "sudo dnf -y in libcdio smartmontools cheese && sudo dnf -y up; exec bash"
 echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE ~~~~~~${RESET}"
 
 echo ""
