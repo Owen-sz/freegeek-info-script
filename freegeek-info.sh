@@ -9,7 +9,7 @@ RESET='\033[0m'
 # Check if on Linux Mint or Ultramarine Linux
 check_os() {
     if [[ "$NAME" == "Ultramarine Linux" ]]; then
-        sudo bash ./freegeek-info-ultramarine.sh
+        sudo bash freegeek-info-ultramarine.sh
         exit 0
     elif [[ "$NAME" == "Linux Mint" ]]; then
         return 0
