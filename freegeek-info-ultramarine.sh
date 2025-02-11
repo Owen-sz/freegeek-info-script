@@ -5,7 +5,7 @@ RESET='\033[0m'
 
 # Run updates in background
 # TODO - Xfce terminal logic
-konsole --window -- bash -c "sudo dnf -y in libcdio smartmontools cheese && sudo dnf -y up; exec bash"
+konsole --window -- bash -c "sudo dnf -y in libcdio inxi smartmontools cheese && sudo dnf -y up; exec bash"
 echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE ~~~~~~${RESET}"
 
 echo ""
@@ -97,30 +97,15 @@ echo ""
 
 # Disk
 
-# Check if smartmontools is installed
-check_smartmontools() {
-    if apt list --installed 2>/dev/null | grep -q "^smartmontools/"; then
-        return 0
-    else
-        return 1
-    fi
-}
-
 # Get the root device without the partition number
 root=$(df / | awk 'NR==2 {print $1}' | sed 's/[0-9]*$//')
 rotation_info=$(lsblk -dn -o ROTA "$root")
 
 # Check if the root device is cringe eMMC '/dev/mmcblk*'
 if [[ "$root" == /dev/mmcblk* ]]; then
-    echo "Root device is an eMMC storage, skipping SMART health check. Please run a bad blocks scan with 'sudo badblocks -v /dev/mmcblk0' after this script"
+    echo "Root device is using eMMC storage, skipping SMART health check. Please run a bad blocks scan with 'sudo badblocks -v /dev/mmcblk0' after this script"
     healthcheck="Not applicable for eMMC"
 else
-    # Loop until smartmontools is installed
-    until check_smartmontools; do
-        echo "smartmontools not found. Waiting for it to be installed..."
-        sleep 5
-    done
-
     # Run the SMART health check on the device and filter for PASSED or FAILED
     healthcheck=$(smartctl -H "$root" | grep -E "PASSED|FAILED" | awk '{print $NF}')
 fi
@@ -132,7 +117,11 @@ total_storage=$(df / | awk 'NR==2 {print int($2 / 1000000 + 0.5) "GBs"}')
 interface=$(lsblk -o TRAN | grep -Ev 'zram|usb' | awk 'NR>1 {print $1}' | sort -u | paste -sd " ")
 
 # Determine storage type (SSD or HDD)
-type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD (if no interface, probably eMMC)"; elif [ "$rotation_info" -eq 1 ]; then echo "HDD"; else echo "Unknown"; fi)
+if [[ -n "$rotation_info" ]]; then
+    type=$(if [ "$rotation_info" -eq 0 ]; then echo "SSD (if no interface, probably eMMC)"; elif [ "$rotation_info" -eq 1 ]; then echo "HDD"; else echo "Unknown"; fi)
+else
+    type="Unknown (rotation info not found)"
+fi
 
 echo -e "${BOLD}Total Storage:${RESET} $total_storage"
 echo -e "${BOLD}Interface:${RESET} $interface"
