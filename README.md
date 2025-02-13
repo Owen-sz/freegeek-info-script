@@ -1,5 +1,5 @@
 # freegeek-info-script
-Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint and Ultramarine Linux. 
+Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint and Ultramarine Linux.
 
 ### How to run:
 1. Open the terminal app from the dock. If it is not there, search the applications menu.
@@ -29,6 +29,7 @@ Shell script that pools together info needed for Free Geek build sheets. Will on
 - [ ] Typing anything but `n` or `{Enter}` in the camera module closes the script without sign off message
 - [ ] Disk Health module sometimes doesn't output anything, seems to not be able to detect "$root" as a device type
 - [ ] Screen Size and Resolution modules unreliable on laptops, `inxi` works fine
+- [ ] SD card is not always accurate
 
 ### Quirks:
 - NVIDIA drivers may not be properly installed to scrape VRAM, may need an extra package installed
