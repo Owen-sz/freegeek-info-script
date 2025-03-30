@@ -23,10 +23,9 @@ Shell script that pools together info needed for Free Geek build sheets. Will on
 - [ ] Add message to tell users to look up year the CPU name out to find the year of the machine
 - [ ] Utilize `inxi -Fxxxz` to find display output ports, find usefulness in machine section
 - [ ] Test multi-battery support
-- [ ] Break into muiltiple files per OS
+- [ ] Reorder modules to better fit their relative locations on build sheet
 
 ### Bugs:
-- [ ] Typing anything but `n` or `{Enter}` in the camera module closes the script without sign off message
 - [ ] Disk Health module sometimes doesn't output anything, seems to not be able to detect "$root" as a device type
 - [ ] Screen Size and Resolution modules unreliable on laptops, `inxi` works fine
 - [ ] SD card is not always accurate

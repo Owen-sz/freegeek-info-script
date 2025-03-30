@@ -112,7 +112,7 @@ echo -e "${BOLD}Slots Used:${RESET}" "$slotsused"
 if [[ -n "$slotstotal" && "$slotstotal" -ne 0 ]]; then
     echo -e "${BOLD}Slots Total:${RESET} $slotstotal"
 else
-    echo -e "${BOLD}Slots Total:${RESET} Unknown (This isn't very accurate, physically check how many slots there are)"
+    echo -e "${BOLD}Slots Total:${RESET} Unknown (May be inaccurate, physically check how many slots there are)"
 fi
 echo -e "${BOLD}Generation:${RESET}" "$generation" || "$generationsdr Why are you putting Linux Mint on an SDR device?! Bring this to the Retro department." || "Generation not found"
 
@@ -176,20 +176,20 @@ if [[ -n "$batteryhealth0" ]]; then
 fi
 
 if [[ -n "$batteryhealth1" ]]; then
-    echo -e "${BOLD}(Second) Battery Health:${RESET} $batteryhealth1"
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth1"
     ((count++))
 fi
 
 if [[ -n "$batteryhealth2" ]]; then
-    echo -e "${BOLD}(Third?) Battery Health:${RESET} $batteryhealth2"
+    echo -e "${BOLD}Battery Health:${RESET} $batteryhealth2"
     ((count++))
 fi
 
 if [[ $count -eq 2 ]]; then
-    echo -e "${BOLD}This computer has 2 batteries. Check with build lab coordinator on how to mark on build sheet.${RESET}"
+    echo -e "${BOLD}This computer has 2 batteries. Check with build lab coordinator for instructions on filling out the build sheet.${RESET}"
 elif [[ $count -eq 3 ]]; then
     echo -e "${BOLD}This computer has 3 batteries. That probably should not happen, ask build coordinator${RESET}"
-elif [[ $count -eq 0 ]]; then
+else
     echo -e "${BOLD}Battery health not found${RESET}"
 fi
 
@@ -208,7 +208,7 @@ fi
 # USB 3.0
 usb3=$(lsusb | grep 3.0)
 if [[ -n "$usb3" ]]; then
-    echo -e "${BOLD}USB3.0:${RESET} Probably (check, note port may not always be blue, check for 'SS' label)"
+    echo -e "${BOLD}USB3.0:${RESET} Probably (check for blue port or port labelled 'SS')"
 else
     echo -e "${BOLD}USB3.0:${RESET} No"
 fi
@@ -227,7 +227,7 @@ else
     echo -e "${BOLD}Ethernet Speed:${RESET} Unknown"
 fi
 
-# Optical drive
+# Optical Drive
 
 # Check if libcdio-utils is installed
 check_libcdio_utils() {
@@ -250,6 +250,7 @@ fi
 echo ""
 
 #Screen Size
+echo "Only include screen specs on build sheet if you're on a laptop"
 screensize=$(inxi -Gxx | awk -F'[()]' '/diag:/ {print $2; exit}')
 echo -e "${BOLD}Screen Size:${RESET} $screensize"
 
@@ -259,7 +260,7 @@ echo -e "${BOLD}Screen Resolution:${RESET} $resolution"
 
 echo ""
 
-# Product name (works best on laptops)
+# Product Name (works best on laptops)
 product_name=$(dmidecode -s system-product-name)
 echo -e "${BOLD}Product Name:${RESET} $product_name (If on a laptop, this is your model and manufacturer. If on a desktop, you may need to refer to the outside branding)"
 
@@ -303,12 +304,12 @@ echo -e "${BOLD}Press enter to begin camera/mic/speaker test.${RESET} (It's reco
 echo -e "${BOLD}Type 'n' if you don't have a webcam${RESET} (If you don't have a webcam, you probably don't have speakers or a mic)"
 
 read -r camera_test
-if [[ $camera_test = "n" ]]; then
-    echo "Camera test aborted"
-    echo -e "${BOLD}~~~~~ SCRIPT COMPLETE ~~~~~${RESET}"
-    echo -e "Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!"
-elif [[ $camera_test = "" ]]; then
+if [[ $camera_test = "" ]]; then
     echo -e "${BOLD}Close camera app to quit script${RESET}"
     echo -e "Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!"
     cheese
+else
+    echo "Camera test aborted"
+    echo -e "${BOLD}~~~~~ SCRIPT COMPLETE ~~~~~${RESET}"
+    echo -e "Please check out https://github.com/Owen-sz/freegeek-info-script to report issues or contribute!"
 fi
