@@ -23,7 +23,7 @@ Shell script that pools together info needed for Free Geek build sheets. Will on
 - [ ] Add message to tell users to look up year the CPU name out to find the year of the machine
 - [ ] Utilize `inxi -Fxxxz` to find display output ports, find usefulness in machine section
 - [ ] Test multi-battery support
-- [ ] Break into muiltiple files per OS
+- [ ] Pipe output to file on desktop 
 
 ### Bugs:
 - [ ] Typing anything but `n` or `{Enter}` in the camera module closes the script without sign off message
