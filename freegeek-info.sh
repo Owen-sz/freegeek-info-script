@@ -4,6 +4,33 @@
 BOLD='\033[1m'
 RESET='\033[0m'
 
+VERSION=1
+LATEST_VERSION=`curl https://raw.githubusercontent.com/Owen-sz/freegeek-info-script/refs/heads/main/freegeek-info.sh | grep VERSION= | sed 's/VERSION=//'`
+
+echo "Current script version: $VERSION"
+echo "Latest script version: $LATEST_VERSION"
+
+if [[ $LATEST_VERSION -gt $VERSION ]]; then
+	echo "${BOLD}New script version available!${RESET}"
+	echo "Automatically downloading and executing in 5 seconds, press Control-C to cancel."
+	printf "1, "
+	sleep 1
+	printf "2, "
+	sleep 1
+	printf "3, "
+	sleep 1
+	printf "4, "
+	sleep 1
+	printf "5."
+	sleep 1
+	(which git || sudo apt install -y git) && git clone https://github.com/Owen-sz/freegeek-info-script.git && cd freegeek-info-script && sudo bash freegeek-info.sh;
+	exit
+elif [[ $LATEST_VERSION -eq $VERSION ]]; then
+	echo "Script is up to date, continuing."
+else
+	echo "Local script is newer than latest available version, assuming you know what you're doing, continuing."
+fi
+
 . /etc/os-release
 
 # Check if on Linux Mint or Ultramarine Linux
