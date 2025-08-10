@@ -28,7 +28,7 @@ if [[ "$NAME" == "Ultramarine Linux" ]]; then
 
 
 # Run updates in background
-gnome-terminal --window -- bash -c "sudo apt install -y libcdio-utils smartmontools ethtool cheese && sudo apt update && sudo apt upgrade -y; exec bash"
+gnome-terminal --window -- bash -c "sudo apt install -y libcdio-utils smartmontools ethtool vlc cheese && sudo apt update && sudo apt upgrade -y; exec bash"
 echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE ~~~~~~${RESET}"
 
 echo ""
