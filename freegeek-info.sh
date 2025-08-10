@@ -25,7 +25,7 @@ check_os
 # Exit if the called script should stop the rest of the script
 if [[ "$NAME" == "Ultramarine Linux" ]]; then
     exit 0
-
+fi
 
 # Run updates in background
 gnome-terminal --window -- bash -c "sudo apt install -y libcdio-utils smartmontools ethtool vlc cheese && sudo apt update && sudo apt upgrade -y; exec bash"
