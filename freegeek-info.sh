@@ -5,7 +5,7 @@ BOLD='\033[1m'
 RESET='\033[0m'
 
 VERSION=1
-LATEST_VERSION=`curl https://raw.githubusercontent.com/Owen-sz/freegeek-info-script/refs/heads/main/freegeek-info.sh | grep VERSION= | sed 's/VERSION=//'`
+LATEST_VERSION=`curl https://raw.githubusercontent.com/Owen-sz/freegeek-info-script/refs/heads/main/freegeek-info.sh | grep ^VERSION= | sed 's/VERSION=//'`
 
 echo "Current script version: $VERSION"
 echo "Latest script version: $LATEST_VERSION"
