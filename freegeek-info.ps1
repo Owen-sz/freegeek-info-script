@@ -23,9 +23,9 @@ red "Installing Windows Update Module..."
 Install-Module PSWindowsUpdate -Force
 Import-Module PSWindowsUpdate
 
-red "-----Opening new window to run Windows updates. Reboot when complete.-----"
+red "-----Opening new window to install needed software and run Windows updates. Reboot when complete.-----"
 
-start-process powershell {Install-WindowsUpdate -AcceptAll}
+start-process powershell {winget install libreoffice crystaldiskinfo; winget upgrade --all --include-unknown --silent --force; Install-WindowsUpdate -AcceptAll}
 
 # CPUs
 
