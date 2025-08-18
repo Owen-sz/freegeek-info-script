@@ -32,6 +32,7 @@ start-process powershell {Install-WindowsUpdate -MicrosoftUpdate -Install -Accep
 
 function cpu {
     Get-WmiObject -Class Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
+		# possibly use this: Get-CmiInstance Win32_Processor | Select-Object Name, NumberOfCores, ThreadCount
 }
 
 yellow "CPU: cpu"
