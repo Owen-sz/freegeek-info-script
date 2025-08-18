@@ -1,5 +1,5 @@
 # freegeek-info-script
-Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint and Ultramarine Linux.
+Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint and Ultramarine Linux. Yes there is a powershell script, however it is very new and not at all ready. It will be in a usable state in the coming weeks.
 
 ### How to run:
 1. Open the terminal app from the dock. If it is not there, search the applications menu.
@@ -9,6 +9,8 @@ Shell script that pools together info needed for Free Geek build sheets. Will on
 ```
 > [!TIP]
 >  Use `Ctrl + Shift + V` to paste into the terminal
+
+If you would like to just use the files on their own, Download the `freegeek-info.sh` file. If you need to use on Ultramarine, download both, store in the same folder, and always run the `freegeek-info.sh` first. Running `freegeek-info.sh` will auto-update the script every time there is a new commit.
 
 ## For Contributors
 
@@ -23,7 +25,7 @@ Shell script that pools together info needed for Free Geek build sheets. Will on
 - [ ] Add message to tell users to look up year the CPU name out to find the year of the machine
 - [ ] Utilize `inxi -Fxxxz` to find display output ports, find usefulness in machine section
 - [ ] Test multi-battery support
-- [ ] Pipe output to file on desktop 
+- [ ] Pipe output to file on desktop
 
 ### Bugs:
 - [ ] Typing anything but `n` or `{Enter}` in the camera module closes the script without sign off message
