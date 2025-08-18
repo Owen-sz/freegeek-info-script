@@ -23,9 +23,9 @@ red "Installing Windows Update Module..."
 Install-Module PSWindowsUpdate -Force
 Import-Module PSWindowsUpdate
 
-start-process powershell {Install-WindowsUpdate -AcceptAll}
+red "-----Opening new window to run Windows updates. Reboot when complete.-----"
 
-red "Opening new window to run Windows updates. Reboot when complete."
+start-process powershell {Install-WindowsUpdate -AcceptAll}
 
 # CPUs
 
