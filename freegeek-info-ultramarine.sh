@@ -5,7 +5,7 @@ RESET='\033[0m'
 
 # Run updates in background
 # TODO - Xfce terminal logic
-konsole -e bash -c "sudo dnf -y in libcdio inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" &
+konsole -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" &
 
 echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE ~~~~~~${RESET}"
 
@@ -196,22 +196,18 @@ fi
 
 # Optical drive
 
-# Check if libcdio-utils is installed
-check_libcdio_utils() {
-    if apt list --installed 2>/dev/null | grep -q "^libcdio-utils/"; then
-        return 0
+has_optical_drive() {
+    if file -s /dev/sr0 2>&1 | grep -qvi "cannot open"; then
+        return 0  # Optical drive exists
     else
-        return 1
+        return 1  # Optical drive doesn't exist
     fi
 }
 
-if check_libcdio_utils; then
-    cdrom=$(cd-drive 2>/dev/null)
-    if [[ -n "$cdrom" ]]; then
-        echo -e "${BOLD}Optical (CD) Drive:${RESET} Yes"
-    else
-        echo -e "${BOLD}Optical (CD) Drive:${RESET} No"
-    fi
+if has_optical_drive; then
+    echo -e "${BOLD}Optical (CD) Drive:${RESET} Yes"
+else
+    echo -e "${BOLD}Optical (CD) Drive:${RESET} No"
 fi
 
 echo ""
