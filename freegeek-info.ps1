@@ -1,5 +1,8 @@
 #!/usr/bin/env pwsh # This shebang is for testing purposes. Not needed on Windows hosts
 
+#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Set-PSRepository PSGallery -InstallationPolicy Trusted; Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ForceBootstrap; Import-PackageProvider NuGet -Name NuGet -Force; Install-Module PSWindowsUpdate -Repository PSGallery -Scope AllUsers -Force -Confirm:$false -SkipPublisherCheck -AllowClobber -AcceptLicense; Import-Module PSWindowsUpdate
+
+
 # colors wowee
 
 function red {
@@ -18,15 +21,20 @@ function yellow {
 
 # Module for Windows update powershell window
 
-red "Installing Windows Update Module..."
+red "Installing PSWindowsUpdate and dependencies…"
 
-Install-Module PSWindowsUpdate -Force
+Set-PSRepository PSGallery -InstallationPolicy Trusted
+Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ForceBootstrap
+Import-PackageProvider NuGet -Force
+
+Install-Module PSWindowsUpdate -Repository PSGallery -Scope AllUsers -Force -Confirm:$false -AllowClobber -SkipPublisherCheck
 Import-Module PSWindowsUpdate
 
 red "-----Opening windows for Windows update and package updates. Reboot when both are complete.-----"
 
-start-process powershell {winget install libreoffice crystaldiskinfo; winget upgrade --all --include --unknown --silent --force}
-start-process powershell {Install-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll}
+Start-Process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "winget install libreoffice crystaldiskinfo; winget upgrade --all --include --unknown --silent --force"' -Wait
+
+start-process PowerShell -Verb RunAs -ArgumentList 'NoProfile -ExecutionPolicy Bypass -NoExit -Command "Install-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll"' -Wait
 
 # CPUs
 
