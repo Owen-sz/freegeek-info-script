@@ -13,11 +13,11 @@ Shell script that pools together info needed for Free Geek build sheets. Will on
 > [!TIP]
 >  Use `Ctrl + Shift + V` to paste into the terminal
 
+If you would like to just use the files on their own, Download the `freegeek-info.sh` file. If you need to use on Ultramarine, download both, store in the same folder, and always run the `freegeek-info.sh` first. Running `freegeek-info.sh` will auto-update the script every time there is a new commit.
+
 #### Windows:
 
-`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser; winget install -y git; start-process powershell; git clone https://Owen-sz/freegeek-info-script.git; cd freegeek-info-script; ./freegeek-info.ps1`
-
-If you would like to just use the files on their own, Download the `freegeek-info.sh` file. If you need to use on Ultramarine, download both, store in the same folder, and always run the `freegeek-info.sh` first. Running `freegeek-info.sh` will auto-update the script every time there is a new commit.
+Coming Soon! Can track progress in the `freegeek-info.ps1` file.
 
 ## For Contributors
 
