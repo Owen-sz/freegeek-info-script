@@ -2,6 +2,9 @@
 Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint and Ultramarine Linux. Yes there is a powershell script, however it is very new and not at all ready. It will be in a usable state in the coming weeks.
 
 ### How to run:
+
+#### Linux:
+
 1. Open the terminal app from the dock. If it is not there, search the applications menu.
 2. Paste this into the terminal to install git if needed, clone (download) the scripit, and run it. It is recommended to increase the size of your terminal at this time.
 ```console
@@ -9,6 +12,10 @@ Shell script that pools together info needed for Free Geek build sheets. Will on
 ```
 > [!TIP]
 >  Use `Ctrl + Shift + V` to paste into the terminal
+
+#### Windows:
+
+`Set-ExecutionPolicy RemoteSigned -Scope CurrentUser; winget install -y git; start-process powershell; git clone https://Owen-sz/freegeek-info-script.git; cd freegeek-info-script; ./freegeek-info.ps1`
 
 If you would like to just use the files on their own, Download the `freegeek-info.sh` file. If you need to use on Ultramarine, download both, store in the same folder, and always run the `freegeek-info.sh` first. Running `freegeek-info.sh` will auto-update the script every time there is a new commit.
 
