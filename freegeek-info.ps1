@@ -1,6 +1,15 @@
 #!/usr/bin/env pwsh # This shebang is for testing purposes. Not needed on Windows hosts
 
-#[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Set-PSRepository PSGallery -InstallationPolicy Trusted; Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ForceBootstrap; Import-PackageProvider NuGet -Name NuGet -Force; Install-Module PSWindowsUpdate -Repository PSGallery -Scope AllUsers -Force -Confirm:$false -SkipPublisherCheck -AllowClobber -AcceptLicense; Import-Module PSWindowsUpdate
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+Set-PSRepository PSGallery -InstallationPolicy Trusted | Out-Null
+
+Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ForceBootstrap | Out-Null
+Import-PackageProvider -Name NuGet -Force | Out-Null
+
+Install-Module PSWindowsUpdate -Repository PSGallery -Scope AllUsers -Force -Confirm:$false -SkipPublisherCheck -AllowClobber | Out-Null
+Import-Module PSWindowsUpdate | Out-Null
+
 
 # colors for formatting
 
@@ -33,19 +42,23 @@ Set-PSRepository PSGallery -InstallationPolicy Trusted
 Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ForceBootstrap
 Import-PackageProvider NuGet -Force
 
-Start-Process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "Install-Module PSWindowsUpdate -Repository PSGallery -Scope AllUsers -Force -Confirm:$false -AllowClobber -SkipPublisherCheck"' -Wait
+Start-Process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "Install-Module PSWindowsUpdate -Repository PSGallery -Scope AllUsers -Force -Confirm:$false -AllowClobber -SkipPublisherCheck"'
 
 Import-Module PSWindowsUpdate
 
-red "-----Opening windows for Windows update and package updates. Reboot when both are complete.-----"
+red "Opening windows for Windows update and package updates. Reboot when all are complete and build sheet is filled out."
 
-Start-Process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "winget install libreoffice crystaldiskinfo; winget upgrade --all --unknown --silent --force"' -Wait
+Start-Process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "winget install libreoffice crystaldiskinfo; winget upgrade --all --unknown --silent --force"'
 
-start-process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "Install-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll"' -Wait
+start-process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "Install-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll"'
 
 # Generate battery report in the same folder as script
 
+Write-Output ""
+
 red "Generating Battery Report..."
+
+Write-Output ""
 
 $reportPath = Join-Path $PSScriptRoot "batteryreport.xml"
 powercfg /batteryreport /XML /OUTPUT $reportPath > $null
@@ -54,22 +67,33 @@ powercfg /batteryreport /XML /OUTPUT $reportPath > $null
 # CPUs
 
 function cpu {
-    Get-WmiObject -Class Win32_Processor | Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
+    Get-WmiObject -Class Win32_Processor |
+        Select-Object Name, NumberOfCores, NumberOfLogicalProcessors
 }
+
+$cpuinfo = cpu | Format-List | Out-String
 
 blue "CPU Information"
 
-yellow "$(cpu)"
+yellow "$cpuinfo"
+
+Write-Output ""
 
 # GPUs
 
 function gpu {
-	Get-CimInstance Win32_VideoController | Format-List Name, @{Name="VRAM (GB)";Expression={[math]::Round($_.AdapterRAM / 1GB, 2)}}
+    Get-CimInstance Win32_VideoController |
+        Select-Object Name, @{Name = "VRAM";        Expression = { $_.AdapterRAM }} 
 }
+
+$gpuinfo = gpu | Format-List | Out-String
 
 blue "GPU Information"
 
-yellow "$(gpu)"
+yellow "$gpuinfo"
+
+Write-Output ""
+
 # RAM
 
 # Disk
@@ -78,12 +102,16 @@ yellow "$(gpu)"
 # System Stuff
 
 function system {
-	Get-ComputerInfo | Select-Object @{Name="Manufacturer";Expression={$_.CsManufacturer}}, @{Name="Model";Expression={$_.CsModel}} | Format-List
+    Get-ComputerInfo |
+        Select-Object @{Name = "Manufacturer"; Expression = { $_.CsManufacturer }},
+                      @{Name = "Model";        Expression = { $_.CsModel }},
+                      @{Name = "OS";           Expression = { $_.OsName }}
 }
 
-blue "System Information"
+$systeminfo = system | Format-List | Out-String
 
-yellow "$(system)"
+blue "System Information"
+yellow "$systeminfo"
 
 # Battery stuff oh boy this is where the fun begins
 
@@ -132,4 +160,5 @@ foreach ($battery in $b.BatteryReport.Batteries.Battery) {
     yellow "Battery Health: $BatteryHealth"
 }
 
+Write-Output ""
 
