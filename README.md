@@ -1,5 +1,5 @@
 # freegeek-info-script
-Shell script that pools together info needed for Free Geek build sheets. Will only work on Linux Mint and Ultramarine Linux. Yes there is a powershell script, however it is very new and not at all ready. It will be in a usable state in the coming weeks.
+Shell script that pools together info needed for Free Geek build sheets. It also installs needed packages and updates the system. Will only work on Linux Mint and Ultramarine Linux. Yes there is a powershell script, however it is very new and not at all ready. It will be in a usable state in the coming weeks.
 
 ### How to run:
 
