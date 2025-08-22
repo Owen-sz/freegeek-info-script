@@ -8,26 +8,26 @@ function red {
     param (
         [string]$Text
     )
-    Write-Output $Text -ForegroundColor Red
+    Write-Host $Text -ForegroundColor Red
 }
 
 function yellow {
     param (
         [string]$Text
     )
-    Write-Output $Text -ForegroundColor Yellow
+    Write-Host $Text -ForegroundColor Yellow
 }
 
 function blue {
     param (
         [string]$Text
     )
-    Write-Output $Text -ForegroundColor Blue
+    Write-Host $Text -ForegroundColor Blue
 }
 
 # Module for Windows update powershell window
 
-red "Installing PSWindowsUpdate and dependencies…"
+red "Installing PSWindowsUpdate and dependencies..."
 
 Set-PSRepository PSGallery -InstallationPolicy Trusted
 Install-PackageProvider NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ForceBootstrap
@@ -41,7 +41,7 @@ red "-----Opening windows for Windows update and package updates. Reboot when bo
 
 Start-Process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "winget install libreoffice crystaldiskinfo; winget upgrade --all --unknown --silent --force"' -Wait
 
-start-process PowerShell -Verb RunAs -ArgumentList 'NoProfile -ExecutionPolicy Bypass -NoExit -Command "Install-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll"' -Wait
+start-process PowerShell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -NoExit -Command "Install-WindowsUpdate -MicrosoftUpdate -Install -AcceptAll"' -Wait
 
 # Generate battery report in the same folder as script
 
