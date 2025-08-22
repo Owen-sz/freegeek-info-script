@@ -138,9 +138,7 @@ foreach ($battery in $b.BatteryReport.Batteries.Battery) {
     [PSCustomObject]@{
         DesignCapacity     = $design
         FullChargeCapacity = $full
-        BatteryHealthPct   = $healthPc
         CycleCount         = $battery.CycleCount
-        Id                 = $battery.Id
     }
 
     # Health category
