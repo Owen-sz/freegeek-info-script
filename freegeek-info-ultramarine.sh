@@ -29,7 +29,7 @@ threads=$(nproc)
 echo -e "${BOLD}CPU:${RESET} $cpu_info"
 echo -e "${BOLD}Cores:${RESET} $cores"
 echo -e "${BOLD}Threads:${RESET} $threads"
-Note, if this computer is not OEM, look up this CPUs release year and use that as the 'year' on your build sheet
+echo "Note, if this computer is not OEM, look up this CPUs release year and use that as the 'year' on your build sheet"
 
 echo ""
 
