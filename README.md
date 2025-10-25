@@ -1,5 +1,5 @@
 # freegeek-info-script
-Shell script that pools together info needed for Free Geek build sheets. It also installs needed packages and updates the system. Will only work on Linux Mint and Ultramarine Linux. Yes there is a powershell script, however it is very new and not at all ready. It will be in a usable state in the coming weeks.
+Shell script that pools together info needed for Free Geek build sheets. It also installs needed packages and updates the system. Will only work on Linux Mint and Ultramarine Linux. Yes there is a powershell script, however it is very new and not at all ready (yet).
 
 ### How to run:
 
@@ -23,7 +23,6 @@ Coming Soon! Can track progress in the `freegeek-info.ps1` file.
 
 ### Still Needs:
 - [ ] Add build sheet PDFs to repo
-- [ ] Foolproofing tips for things like what exactly to google or what kinds of branding to look for on a desktop case
 - [ ] Ability to detect and list multiple drives
 - [ ] Reliably list total number of RAM slots
 - [ ] Find out if Ethernet module works on 10/100, 2.5 Gig, or 10 Gig ports.
@@ -37,6 +36,6 @@ Coming Soon! Can track progress in the `freegeek-info.ps1` file.
 - [ ] SD card is not always accurate
 
 ### Quirks:
-- NVIDIA drivers may not be properly installed to scrape VRAM, may need an extra package installed
+- If using NVIDIA, depending on the driver, VRAM may not be able to be pulled
 - Product name may not show manufacturer
-- Disk sizes are not very accurate
+- Disk sizes can be inaccurate, round up to nearest 'common' disk size
