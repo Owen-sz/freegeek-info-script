@@ -10,9 +10,9 @@ echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DO
 
 check_os() {
     if [[ "$VARIANT_ID" == "xfce" ]]; then
-        xfce4-terminal -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" & ;
+        xfce4-terminal --execute bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up" &
     elif [[ "$VARIANT_ID" == "plasma" ]]; then
-        konsole -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" & ;
+        konsole -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" &
     else
         echo "${BOLD}You should use Ultramarine Xfce or Plasma Editions.${RESET}"
         exit 1
