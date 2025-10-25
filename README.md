@@ -28,7 +28,6 @@ Coming Soon! Can track progress in the `freegeek-info.ps1` file.
 - [ ] Reliably list total number of RAM slots
 - [ ] NVIDIA will need an extra package installed
 - [ ] Find out if Ethernet module works on 10/100, 2.5 Gig, or 10 Gig ports.
-- [ ] Add message to tell users to look up year the CPU name out to find the year of the machine
 - [ ] Utilize `inxi -Fxxxz` to find display output ports, find usefulness in machine section
 - [ ] Test multi-battery support
 - [ ] Pipe output to file on desktop
