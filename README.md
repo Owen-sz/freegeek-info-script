@@ -26,11 +26,9 @@ Coming Soon! Can track progress in the `freegeek-info.ps1` file.
 - [ ] Foolproofing tips for things like what exactly to google or what kinds of branding to look for on a desktop case
 - [ ] Ability to detect and list multiple drives
 - [ ] Reliably list total number of RAM slots
-- [ ] NVIDIA will need an extra package installed
 - [ ] Find out if Ethernet module works on 10/100, 2.5 Gig, or 10 Gig ports.
 - [ ] Utilize `inxi -Fxxxz` to find display output ports, find usefulness in machine section
 - [ ] Test multi-battery support
-- [ ] Pipe output to file on desktop
 
 ### Bugs:
 - [ ] Typing anything but `n` or `{Enter}` in the camera module closes the script without sign off message

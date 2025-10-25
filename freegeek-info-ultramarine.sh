@@ -63,7 +63,7 @@ while IFS= read -r gpu; do
                     echo -e "${BOLD}VRAM:${RESET} ${vram_gb}GBs"
                     echo ""
                 else
-                    echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, might be a driver issue, google it"
+                    echo -e "${BOLD}VRAM:${RESET} Error in detecting VRAM, might be a driver issue. Google GPU VRAM size"
                     echo ""
                 fi
             else
