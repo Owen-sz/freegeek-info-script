@@ -26,9 +26,10 @@ sleep 1
 cpu_info=$(grep -m 1 'model name' /proc/cpuinfo | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}')
 cores=$(lscpu | grep -i 'core(s)' | awk '{print $4}')
 threads=$(nproc)
-echo -e "${BOLD}CPU:${RESET} $cpu_info (Note, if this computer is not OEM, look up this CPUs release year and use that as the 'year' on your build sheet"
+echo -e "${BOLD}CPU:${RESET} $cpu_info"
 echo -e "${BOLD}Cores:${RESET} $cores"
 echo -e "${BOLD}Threads:${RESET} $threads"
+Note, if this computer is not OEM, look up this CPUs release year and use that as the 'year' on your build sheet
 
 echo ""
 
