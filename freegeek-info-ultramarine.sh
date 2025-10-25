@@ -5,9 +5,19 @@ RESET='\033[0m'
 
 # Run updates in background
 # TODO - Xfce terminal logic
-konsole -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" &
 
 echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE ~~~~~~${RESET}"
+
+check_os() {
+    if [[ "$VARIANT_ID" == "xfce" ]]; then
+        xfce4-terminal -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" & ;
+    elif [[ "$VARIANT_ID" == "plasma" ]]; then
+        konsole -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" & ;
+    else
+        echo "${BOLD}You should use Ultramarine Xfce or Plasma Editions.${RESET}"
+        exit 1
+    fi
+}
 
 echo ""
 

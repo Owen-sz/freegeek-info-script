@@ -23,7 +23,6 @@ Coming Soon! Can track progress in the `freegeek-info.ps1` file.
 
 ### Still Needs:
 - [ ] Add build sheet PDFs to repo
-- [ ] Add Ultramarine Xfce Edition xfce-terminal background logic
 - [ ] Foolproofing tips for things like what exactly to google or what kinds of branding to look for on a desktop case
 - [ ] Ability to detect and list multiple drives
 - [ ] Reliably list total number of RAM slots
