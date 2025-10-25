@@ -3,21 +3,20 @@
 BOLD='\033[1m'
 RESET='\033[0m'
 
-# Run updates in background
-# TODO - Xfce terminal logic
-
 echo -e "${BOLD}~~~~~~ OPENING NEW WINDOW FOR UPDATES, VERIFY COMPLETION WHEN DONE ~~~~~~${RESET}"
 
-check_os() {
-    if [[ "$VARIANT_ID" == "xfce" ]]; then
-        xfce4-terminal --execute bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up" &
-    elif [[ "$VARIANT_ID" == "plasma" ]]; then
-        konsole -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" &
-    else
-        echo "${BOLD}You should use Ultramarine Xfce or Plasma Editions.${RESET}"
-        exit 1
-    fi
-}
+# Run updates in background
+
+source /etc/os-release
+echo $VARIANT_ID
+if [[ "$VARIANT_ID" == "xfce" ]]; then
+    xfce4-terminal --execute bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up" &
+elif [[ "$VARIANT_ID" == "plasma" ]]; then
+    konsole -e bash -c "sudo dnf -y in inxi smartmontools cheese vlc && sudo dnf -y up; exec bash" &
+else
+    echo -e "${BOLD}You should use Ultramarine Xfce or Plasma Editions.${RESET}"
+    exit 1
+fi
 
 echo ""
 
